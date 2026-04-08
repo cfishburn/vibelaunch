@@ -1,8 +1,8 @@
 # Vibe Launch
 
-An opinionated Astro starter that ships with everything an AI coding assistant needs to work effectively on your project from day one.
+An open-source exit ramp for teams who got something half-working in Lovable, Bolt, Replit, or a late-night prompt spiral and now need a real Astro codebase before entropy takes over.
 
-Most scaffolds give you a tech stack. This one gives you a **workflow** — AI guardrails, guard scripts, documentation standards, design tokens, site config, SEO, and content collections that are structured so AI tools produce code that fits the codebase on the first try.
+Most scaffolds give you a tech stack. This one gives you a **workflow**: AI guardrails, guard scripts, documentation standards, motion and design tokens, site config, SEO, and content collections structured so AI tools produce code that fits the repo on the first try.
 
 **Domain:** [vibelaunch.ai](https://vibelaunch.ai)
 
@@ -24,9 +24,12 @@ This scaffold demonstrates how to set that up for a real Astro project with auth
 | **Design tokens** | `@theme` block + DaisyUI semantic tokens | Eliminate arbitrary CSS values — AI always picks the right class |
 | **Icons** | `iconoir-react` + `src/components/icons/` wrapper | One flat icon vocabulary without scattered custom SVGs |
 | **Site config** | `src/config/site.ts` | Single source of truth for brand, domain, nav, footer, SEO defaults |
+| **Motion** | `src/config/motion.ts` + `data-reveal` + `.motion-lift` | Built-in Astro transitions plus restrained scroll reveals, no animation dependency sprawl |
 | **SEO** | OG tags, Twitter Cards, JSON-LD, sitemap, robots.txt | Built into the layout, not bolted on |
 | **LLM discovery** | `/llms.txt`, `/llms-full.txt` | Help AI search engines find and cite your content |
-| **Code formatting** | Shiki `github-light` syntax highlighting | Styled code blocks and inline code in all content |
+| **Typography** | Space Grotesk (headings) + Inter (body) + JetBrains Mono (code) | Self-hosted via `@fontsource`, no Google Fonts dependency |
+| **Dark mode** | Custom monochromatic light/dark themes + toggle | System preference detection, localStorage persistence, no flash |
+| **Code formatting** | Shiki dual-theme (`github-light` / `github-dark`) | Styled code blocks and inline code, theme-aware |
 | **Responsive** | Mobile-first with DaisyUI dropdown nav | Hamburger menu on mobile, full nav on desktop |
 | **Auth** | Clerk middleware + protected routes | BFF pattern with Astro API routes between browser and backend |
 | **Content** | Markdown blog + MDX site pages + superpowers docs | Typed with Zod schemas, validated at build time |
@@ -54,6 +57,8 @@ pnpm guard:pre-commit   # Run pre-commit guard suite
 pnpm guard:ci           # Run full CI guard suite
 ```
 
+Before opening a PR, run `pnpm guard:ci`.
+
 ## Project shape
 
 ```
@@ -61,8 +66,10 @@ CLAUDE.md                 AI guardrails for Claude Code
 AI.md                     AI guardrails for any assistant
 src/
   config/site.ts          Brand, domain, nav, footer, SEO defaults
+  config/motion.ts        Motion tokens shared by page transitions and reveals
   components/             Astro + React components
     icons/                Shared flat icon wrapper + curated exports
+    MotionController.astro Reveal observer for scroll-driven entrance motion
     PageActions.astro     Shared site-page action renderer
     SitePageContent.astro Shared content-flow wrapper for MDX-backed pages
     PromptWorkflow.tsx    Interactive playbook step viewer
@@ -86,6 +93,7 @@ src/
   middleware.ts           Clerk auth route protection
 docs/
   developer-setup.md      Editor + CLI recommendations for contributors
+  devlog/README.md        Where real project devlogs belong
 scripts/
   guard-registry.yml      Guard suite configuration
   guard-all.mjs           Orchestrator
@@ -106,6 +114,16 @@ Pre-commit hooks run automatically via husky. Guards are defined in `scripts/gua
 | **build** | Source maps, leaked secrets in dist/ | CI |
 
 `guard:ci` now includes a build-output smoke pass for the key public routes after the production build completes.
+
+## Demo surfaces
+
+This repo intentionally ships a few clearly labeled demo surfaces:
+
+- `/app` for the signed-in member view
+- `/admin` for the allowlisted admin view
+- `/api/debug/clerk-users.json` as a temporary admin-only BFF debug route
+
+Keep them if they help your fork. Replace or remove them if your production app does not need them.
 
 ## AI guardrails
 
@@ -147,6 +165,8 @@ The `src/content/superpowers/` collection contains two high-leverage patterns:
 - **`dev-log.mdx`** — Ephemeral devlog standard for active work history, experiments, and decision trails.
 
 The wider AI operating guidance for the repo lives in **`AI.md`** and **`CLAUDE.md`**, not in the public content collection.
+
+Actual working devlogs belong under `docs/devlog/`, using the public devlog standard as the template.
 
 ## Environment
 

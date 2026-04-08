@@ -47,3 +47,5 @@ pnpm run guard:ci
 ```
 
 Run `pnpm run smoke:public` after `pnpm run build`. It verifies the generated public output and the critical docs links before you publish or open a release PR.
+
+If the work spans multiple sessions or non-obvious tradeoffs, create a devlog under `docs/devlog/` using `src/content/superpowers/dev-log.mdx` as the standard.

@@ -22,7 +22,11 @@ import { superpowersRoute } from '../lib/superpower-docs';
 	</div>
 
 	<section class="mb-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-		<div class="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
+		<div
+			class="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15"
+			data-reveal="vertical"
+			data-reveal-order="1"
+		>
 			<div class="flex items-center gap-2">
 				<Icon icon={BookIcon} className="h-5 w-5 text-primary" />
 				<p class="eyebrow">What this page is</p>
@@ -41,7 +45,11 @@ import { superpowersRoute } from '../lib/superpower-docs';
 			</div>
 		</div>
 
-		<div class="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
+		<div
+			class="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15"
+			data-reveal="horizontal"
+			data-reveal-order="2"
+		>
 			<div class="flex items-center gap-2">
 				<Icon icon={TerminalIcon} className="h-5 w-5 text-primary" />
 				<p class="eyebrow">How to use it</p>
@@ -60,7 +68,10 @@ import { superpowersRoute } from '../lib/superpower-docs';
 
 	<PromptWorkflow client:load steps={agenticScaffoldWorkflow} />
 
-	<section class="mt-10 rounded-card-lg border border-base-300 bg-base-100 p-8 shadow-xl shadow-base-300/15">
+	<section
+		class="mt-10 rounded-card-lg border border-base-300 bg-base-100 p-8 shadow-xl shadow-base-300/15"
+		data-reveal="vertical"
+	>
 		<div class="flex items-center gap-2">
 			<Icon icon={ShieldCheckIcon} className="h-5 w-5 text-primary" />
 			<p class="eyebrow">After the playbook</p>

@@ -16,9 +16,16 @@ export const site = {
 	darkTheme: 'dark',
 	tagline: 'Keep the speed. Lose the vibe-coding entropy.',
 	description:
-		'Open-source Astro starter for teams who got something working with AI and now need a real codebase before the entropy eats the project alive. Guardrails, docs, design tokens, and a small auth/BFF reference implementation included.',
+		'Open-source Astro starter and playbook for teams escaping Lovable, Bolt, Replit, or prompt-sprawl before the repo turns feral. Guardrails, docs, motion tokens, design tokens, and a small auth/BFF reference implementation included.',
 	defaultAuthor: 'Vibe Launch',
 	defaultImage: undefined as string | undefined,
+	seo: {
+		robots: 'index, follow, max-image-preview:large',
+		ogLocale: 'en_US',
+		themeColorLight: '#f5f5f7',
+		themeColorDark: '#23242b',
+		llmsIndexPath: '/llms.txt',
+	},
 	auth: {
 		signInLabel: 'Sign in',
 		signUpLabel: 'Create account',

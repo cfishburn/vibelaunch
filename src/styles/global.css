@@ -1,6 +1,23 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/700.css";
+
 @import "tailwindcss";
 @plugin "daisyui" {
 	themes: false;
+}
+
+:root {
+	--motion-duration-fast: 180ms;
+	--motion-duration-base: 260ms;
+	--motion-duration-slow: 420ms;
+	--motion-duration-page: 320ms;
+	--motion-stagger-step: 70ms;
+	--motion-distance-y: 18px;
+	--motion-distance-x: 28px;
+	--motion-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+	--motion-ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ── Custom monochromatic themes ── */
@@ -52,6 +69,9 @@
 	--radius-card: 1.75rem;
 	--radius-card-lg: 2rem;
 	--letter-spacing-caps: 0.2em;
+	--font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+	--font-heading: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+	--font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 html,
@@ -64,16 +84,79 @@ body {
 	background: var(--color-base-200);
 }
 
+.motion-lift {
+	transition:
+		transform var(--motion-duration-fast) var(--motion-ease-standard),
+		border-color var(--motion-duration-fast) var(--motion-ease-standard),
+		box-shadow var(--motion-duration-fast) var(--motion-ease-standard),
+		background-color var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.motion-lift:hover,
+.motion-lift:focus-visible {
+	transform: translateY(-2px);
+}
+
+/* ── Heading font applied to all headings ── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-heading);
+}
+
 .site-chrome {
 	min-height: 100vh;
 }
 
 .eyebrow {
+	font-family: var(--font-heading);
 	font-size: 0.75rem;
 	font-weight: 700;
 	letter-spacing: 0.24em;
 	text-transform: uppercase;
 	color: var(--color-primary);
+}
+
+html[data-motion="ready"] [data-reveal] {
+	opacity: 0;
+	transform: translate3d(var(--reveal-x, 0px), var(--reveal-y, 0px), 0);
+	transition:
+		opacity var(--motion-duration-slow) var(--motion-ease-emphasis),
+		transform var(--motion-duration-slow) var(--motion-ease-emphasis);
+	transition-delay: var(--reveal-delay, 0ms);
+	will-change: opacity, transform;
+}
+
+html[data-motion="ready"] [data-reveal="vertical"] {
+	--reveal-y: var(--motion-distance-y);
+}
+
+html[data-motion="ready"] [data-reveal="horizontal"] {
+	--reveal-x: var(--motion-distance-x);
+}
+
+html[data-motion="ready"] [data-reveal-order="1"] {
+	--reveal-delay: calc(var(--motion-stagger-step) * 1);
+}
+
+html[data-motion="ready"] [data-reveal-order="2"] {
+	--reveal-delay: calc(var(--motion-stagger-step) * 2);
+}
+
+html[data-motion="ready"] [data-reveal-order="3"] {
+	--reveal-delay: calc(var(--motion-stagger-step) * 3);
+}
+
+html[data-motion="ready"] [data-reveal-order="4"] {
+	--reveal-delay: calc(var(--motion-stagger-step) * 4);
+}
+
+html[data-motion="ready"] [data-reveal][data-reveal-state="visible"] {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
 }
 
 .content-flow {
@@ -134,7 +217,7 @@ dd code {
 	padding: 0.15em 0.4em;
 	border-radius: 0.3em;
 	font-size: 0.875em;
-	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	font-family: var(--font-mono);
 	background: color-mix(in srgb, var(--color-base-300) 60%, transparent);
 	color: var(--color-base-content);
 }
@@ -194,4 +277,16 @@ dd code {
 
 .superpower-prose strong {
 	color: var(--color-base-content);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.motion-lift {
+		transition: none;
+	}
+
+	html[data-motion="ready"] [data-reveal] {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
 }

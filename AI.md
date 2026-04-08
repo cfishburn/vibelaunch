@@ -75,7 +75,7 @@ This document describes the conventions, architecture, and constraints for AI as
 
 **Fix command**: `pnpm tooling:fix`
 
-Astro files are linted too, but Biome's `noUnusedImports` and `noUnusedVariables` checks are relaxed for `*.astro` because template usage still produces false positives there. `astro check` remains the backstop for Astro-specific diagnostics.
+Astro files are linted too. `astro check` remains the backstop for Astro-specific diagnostics and content collection typing.
 
 ---
 
@@ -120,6 +120,17 @@ import { pageTitle, site } from '../config/site';
 ## Icons
 
 Use the local icon layer in `src/components/icons/`, not ad hoc SVG markup scattered across the app. The scaffold currently uses `iconoir-react`, but components should import from the wrapper so the icon pack remains swappable.
+
+## Motion
+
+Use the built-in motion system before adding animation libraries:
+
+- `src/config/motion.ts` is the token source for durations, easing, and movement distance.
+- `src/components/MotionController.astro` handles scroll-based reveal state.
+- `data-reveal="vertical"` and `data-reveal="horizontal"` are the preferred entrance patterns.
+- `.motion-lift` is the shared hover/elevation utility for cards and buttons that need a little movement.
+
+Respect `prefers-reduced-motion`. Do not add decorative animation just because the page feels static.
 
 ---
 
@@ -333,7 +344,7 @@ Public vars use the `PUBLIC_` prefix. Secret vars (server-only) do not.
 
 **Add durable documentation**: Start from `src/content/superpowers/doc-template.mdx`, keep the frontmatter accurate, and prefer links over duplicated sources of truth.
 
-**Add a devlog**: Only when a task spans multiple sessions or needs non-obvious rationale. Follow `src/content/superpowers/dev-log.mdx` and place entries under `docs/devlog/`.
+**Add a devlog**: Only when a task spans multiple sessions or needs non-obvious rationale. Follow `src/content/superpowers/dev-log.mdx` and place the actual working log under `docs/devlog/`.
 
 **Protect a route**: Add the pattern to `createRouteMatcher` in `src/middleware.ts`.
 

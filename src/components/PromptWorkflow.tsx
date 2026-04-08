@@ -29,7 +29,8 @@ export default function PromptWorkflow({ steps }: PromptWorkflowProps) {
 				return (
 					<section
 						key={step.id}
-						className="rounded-card-lg border border-base-300 bg-base-100 p-6 shadow-xl shadow-base-300/15"
+						className="motion-lift rounded-card-lg border border-base-300 bg-base-100 p-6 shadow-xl shadow-base-300/15"
+						data-reveal="vertical"
 					>
 						<div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
 							<div className="space-y-3">

@@ -1,4 +1,5 @@
 ---
+import { ClientRouter, slide } from 'astro:transitions';
 import { Show, UserButton } from '@clerk/astro/react';
 import {
 	BookIcon,
@@ -9,8 +10,10 @@ import {
 	TerminalIcon,
 	UserIcon,
 } from '../components/icons';
+import MotionController from '../components/MotionController.astro';
 import SEO from '../components/SEO.astro';
 import ThemeToggle from '../components/ThemeToggle';
+import { motion, motionCssVariables } from '../config/motion';
 import { site } from '../config/site';
 import '../styles/global.css';
 
@@ -44,7 +47,12 @@ const navIcons = {
 ---
 
 <!doctype html>
-<html lang={site.locale} data-theme={site.theme}>
+<html
+	lang={site.locale}
+	data-theme={site.theme}
+	style={motionCssVariables}
+	transition:animate="none"
+>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -52,8 +60,9 @@ const navIcons = {
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<script is:inline>
-			(function(){var t=localStorage.getItem('vl-theme');if(!t){t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)})();
+			(function(){var d=document.documentElement;var t=localStorage.getItem('vl-theme');if(!t){t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'}d.setAttribute('data-theme',t);d.setAttribute('data-motion',matchMedia('(prefers-reduced-motion:reduce)').matches?'reduced':'ready')})();
 		</script>
+		<ClientRouter fallback="animate" />
 		<SEO
 			title={title}
 			description={description}
@@ -65,8 +74,9 @@ const navIcons = {
 		/>
 	</head>
 	<body class="min-h-screen bg-base-200 text-base-content">
+		<MotionController />
 		<div class="site-chrome">
-			<header class="border-b border-base-300/80 bg-base-100/80 backdrop-blur">
+			<header class="border-b border-base-300/80 bg-base-100/80 backdrop-blur" transition:persist>
 				<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 					<a href="/" class="flex shrink-0 items-center gap-3 text-sm font-semibold uppercase tracking-caps">
 						<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-xs text-primary">
@@ -151,10 +161,10 @@ const navIcons = {
 					</div>
 				</div>
 			</header>
-			<main>
+			<main transition:name="page-content" transition:animate={slide({ duration: motion.pageDuration })}>
 				<slot />
 			</main>
-			<footer class="border-t border-base-300/80 bg-base-100/80">
+			<footer class="border-t border-base-300/80 bg-base-100/80" transition:persist>
 				<div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8 text-sm text-base-content/70 md:flex-row md:items-center md:justify-between">
 					<p class="wrap-break-word">{site.footer.left}</p>
 					<div class="flex flex-wrap items-center gap-2 md:gap-4 md:justify-end">

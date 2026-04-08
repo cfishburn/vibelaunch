@@ -45,8 +45,10 @@ pnpm guard:ci         # Run full CI guard suite
 ```
 src/
 ├── config/site.ts   # Brand, domain, nav, footer, SEO defaults (single source of truth)
+├── config/motion.ts # Motion tokens for route transitions and reveal timing
 ├── components/      # Astro + React components (React = client islands)
 │   ├── icons/       # Shared flat icon wrapper + curated exports
+│   ├── MotionController.astro # Scroll-reveal observer
 │   ├── SEO.astro    # OpenGraph, Twitter Cards, JSON-LD
 │   ├── PageActions.astro   # Shared site-page action renderer
 │   ├── SitePageContent.astro # Shared MDX content wrapper
@@ -68,6 +70,7 @@ src/
 ├── env.d.ts         # Environment variable types
 └── content.config.ts # Content collection schemas (blog, sitePages, superpowers)
 src/content/superpowers/ # Durable doc template + devlog standard
+docs/devlog/        # Actual working devlogs created from the public standard
 scripts/             # Guard suite + project tooling (not app code)
 ```
 
@@ -78,6 +81,15 @@ scripts/             # Guard suite + project tooling (not app code)
 ## Icons
 
 Use `src/components/icons/` instead of hand-rolled SVGs in components or pages. The app should depend on the local icon wrapper, not directly on the package, so forks can swap icon packs later without broad UI churn.
+
+## Motion
+
+Use the built-in motion system before you reach for an animation dependency:
+
+- `src/config/motion.ts` defines timing, easing, and movement tokens
+- `src/components/MotionController.astro` drives `data-reveal` entrance states
+- `data-reveal="vertical"` and `data-reveal="horizontal"` are the standard reveal patterns
+- `.motion-lift` is the shared hover utility for cards and lightweight interactive surfaces
 
 ## Documentation Superpowers
 

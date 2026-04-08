@@ -5,8 +5,8 @@ Thanks for considering a contribution to Vibe Launch. This project is an opinion
 ## Getting started
 
 ```sh
-git clone https://github.com/shfishburn/vibelaunch.git
-cd vibelaunch
+git clone <your-fork-url>
+cd <your-repo-directory>
 pnpm install
 cp .env.example .env.local
 pnpm dev
@@ -84,6 +84,8 @@ Use `dev-log.mdx` when:
 
 Do not create devlogs for tiny edits, obvious fixes, or changes that are already fully explained by the code and commit history.
 
+If you do create one, put the real work log under `docs/devlog/` and use `src/content/superpowers/dev-log.mdx` as the standard.
+
 ## Adding pages and routes
 
 - Static page: `src/pages/my-page.astro` using `Layout` wrapper
@@ -97,7 +99,10 @@ Do not create devlogs for tiny edits, obvious fixes, or changes that are already
 2. Make your changes
 3. Ensure `pnpm guard:ci` passes (or at minimum `pnpm guard:pre-commit`)
 4. Ensure `pnpm build` succeeds
-5. Open a PR with a clear description of what changed and why
+5. Include evidence: what you ran, what you visually verified, and how to roll back
+6. Open a PR with a clear description of what changed and why
+
+Direct pushes to `main` are the wrong default for this repo. Use a branch, open a PR, and let the guard suite plus review do their job.
 
 ## What makes a good contribution
 

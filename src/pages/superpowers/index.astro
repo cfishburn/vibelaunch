@@ -26,7 +26,11 @@ const docs = sortSuperpowers(await getCollection('superpowers'));
 	</div>
 
 	<section class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-		<div class="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
+		<div
+			class="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15"
+			data-reveal="vertical"
+			data-reveal-order="1"
+		>
 			<p class="eyebrow">How to use this library</p>
 			<div class="mt-4 space-y-4 text-base leading-8 text-base-content/75">
 				<p>
@@ -42,7 +46,11 @@ const docs = sortSuperpowers(await getCollection('superpowers'));
 			</div>
 		</div>
 
-		<div class="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
+		<div
+			class="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15"
+			data-reveal="horizontal"
+			data-reveal-order="2"
+		>
 			<p class="eyebrow">What does not belong here</p>
 			<ul class="mt-4 space-y-3 text-sm leading-7 text-base-content/75">
 				<li>Do not use the doc template for tiny fixes, cosmetic edits, or obvious refactors.</li>
@@ -56,8 +64,9 @@ const docs = sortSuperpowers(await getCollection('superpowers'));
 	<section class="mt-8 grid gap-4 lg:grid-cols-2">
 		{docs.map((doc) => (
 			<a
-				class="rounded-card-lg border border-base-300 bg-base-100 p-6 transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-base-300/20"
+				class="motion-lift rounded-card-lg border border-base-300 bg-base-100 p-6 hover:border-primary/30 hover:shadow-lg hover:shadow-base-300/20"
 				href={getSuperpowerRoute(doc.id)}
+				data-reveal="vertical"
 			>
 				<p class="eyebrow">Documentation superpower</p>
 				<h2 class="mt-4 text-2xl font-semibold tracking-tight">{doc.data.title}</h2>
