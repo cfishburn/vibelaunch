@@ -1,17 +1,58 @@
 {
-  "name": "scaffold",
-  "type": "module",
-  "version": "0.0.1",
-  "engines": {
-    "node": ">=22.12.0"
-  },
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "astro": "^6.1.5"
-  }
+	"name": "scaffold",
+	"private": true,
+	"type": "module",
+	"version": "0.0.1",
+	"packageManager": "pnpm@10.30.1",
+	"engines": {
+		"node": ">=22.12.0"
+	},
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"check": "astro check",
+		"lint": "pnpm exec biome lint .",
+		"tooling:staged": "pnpm exec biome check --staged --no-errors-on-unmatched",
+		"format": "pnpm exec biome format --write .",
+		"tooling:check": "pnpm exec biome check .",
+		"tooling:fix": "pnpm exec biome check --write .",
+		"guard": "node scripts/guard-all.mjs",
+		"guard:pre-commit": "node scripts/guard-all.mjs --phase pre-commit",
+		"guard:ci": "node scripts/guard-all.mjs --phase ci",
+		"guard:secrets": "node scripts/guard-secrets.mjs",
+		"guard:bypass": "node scripts/guard-bypass.mjs",
+		"guard:build": "node scripts/guard-build.mjs",
+		"guard:lockfile": "node scripts/guard-lockfile.mjs --staged",
+		"guard:solid": "node scripts/guard-solid.mjs --warn-only",
+		"guard:tooling": "node scripts/guard-tooling.mjs",
+		"ci": "pnpm run guard:ci",
+		"preinstall": "node ./scripts/enforce-pnpm.mjs",
+		"prepare": "node ./.husky/install.mjs",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"@astrojs/mdx": "^5.0.3",
+		"@astrojs/react": "^5.0.3",
+		"@astrojs/sitemap": "^3.7.2",
+		"@astrojs/vercel": "^10.0.4",
+		"@clerk/astro": "^3.0.11",
+		"@supabase/supabase-js": "^2.102.1",
+		"@tailwindcss/vite": "^4.2.2",
+		"@tanstack/react-query": "^5.96.2",
+		"astro": "^6.1.5",
+		"daisyui": "^5.5.19",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4",
+		"tailwindcss": "^4.2.2",
+		"zod": "^4.3.6"
+	},
+	"devDependencies": {
+		"@astrojs/check": "^0.9.8",
+		"@biomejs/biome": "^2.4.10",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"husky": "^9.1.7",
+		"typescript": "^5.9.3"
+	}
 }

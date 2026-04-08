@@ -1,0 +1,31 @@
+---
+export const prerender = false;
+
+import { SignUp } from '@clerk/astro/react';
+
+import PageTemplate from '../../components/PageTemplate.astro';
+import { getSitePage } from '../../lib/site-pages';
+
+const { Content, entry } = await getSitePage('sign-up');
+---
+
+<PageTemplate
+	eyebrow={entry.data.eyebrow}
+	title={entry.data.title}
+	description={entry.data.description}
+	metaTitle={entry.data.metaTitle}
+>
+	<div class="flex justify-center">
+		<div class="w-full max-w-md rounded-card border border-base-300 bg-base-100 p-4 shadow-lg shadow-base-300/15">
+			<SignUp client:load path="/sign-up" routing="path" signInUrl="/sign-in" />
+		</div>
+	</div>
+
+	{entry.data.useContentFlow ? (
+		<article class="content-flow mt-8">
+			<Content />
+		</article>
+	) : (
+		<Content />
+	)}
+</PageTemplate>

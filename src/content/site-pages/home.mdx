@@ -1,0 +1,62 @@
+---
+eyebrow: Open source scaffold
+title: An AI-friendly Astro starter with guard scripts, design tokens, and convention files
+metaTitle: An AI-friendly Astro starter with guard scripts, design tokens, and convention files
+description: Ship with CLAUDE.md, AI.md, a guard suite, design tokens, and content collections that tell AI coding assistants exactly how to work on your project.
+useContentFlow: false
+actions:
+  - label: Open member page
+    href: /app
+    variant: primary
+  - label: Browse stories
+    href: /stories
+    variant: outline
+---
+
+<div className="grid gap-6 lg:grid-cols-3">
+	<div className="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
+		<p className="text-sm font-semibold uppercase tracking-caps text-primary">AI guardrails</p>
+		<h2 className="mt-4 text-2xl font-semibold tracking-tight">CLAUDE.md + AI.md</h2>
+		<p className="mt-3 leading-8 text-base-content/75">
+			Convention files that tell AI assistants your code style, design tokens, guard rules, and content schemas before they write a line.
+		</p>
+	</div>
+	<div className="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
+		<p className="text-sm font-semibold uppercase tracking-caps text-primary">Guard suite</p>
+		<h2 className="mt-4 text-2xl font-semibold tracking-tight">6 registry-driven checks</h2>
+		<p className="mt-3 leading-8 text-base-content/75">
+			Secrets, bypass attempts, lint errors, lockfile drift, SOLID heuristics, and build artifact scanning — all at commit time.
+		</p>
+	</div>
+	<div className="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
+		<p className="text-sm font-semibold uppercase tracking-caps text-primary">Design tokens</p>
+		<h2 className="mt-4 text-2xl font-semibold tracking-tight">Zero arbitrary values</h2>
+		<p className="mt-3 leading-8 text-base-content/75">
+			Custom <code>@theme</code> tokens and DaisyUI semantic classes mean AI tools always pick the right Tailwind class.
+		</p>
+	</div>
+</div>
+
+<div className="mt-8 rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
+	<p className="text-sm font-semibold uppercase tracking-caps text-primary">What's inside</p>
+	<div className="mt-4 grid gap-4 md:grid-cols-3">
+		<div className="rounded-box border border-base-300 bg-base-200/60 p-4">
+			<p className="font-semibold">1. Conventions</p>
+			<p className="mt-2 text-sm leading-7 text-base-content/75">
+				Site config, design tokens, content schemas, and AI guardrails — all documented and enforced.
+			</p>
+		</div>
+		<div className="rounded-box border border-base-300 bg-base-200/60 p-4">
+			<p className="font-semibold">2. Auth + BFF</p>
+			<p className="mt-2 text-sm leading-7 text-base-content/75">
+				Clerk middleware, protected routes, and Astro API routes sitting between the browser and backend.
+			</p>
+		</div>
+		<div className="rounded-box border border-base-300 bg-base-200/60 p-4">
+			<p className="font-semibold">3. SEO + LLMs</p>
+			<p className="mt-2 text-sm leading-7 text-base-content/75">
+				OpenGraph, JSON-LD, sitemap, robots.txt, and llms.txt — all generated from content collections at build time.
+			</p>
+		</div>
+	</div>
+</div>

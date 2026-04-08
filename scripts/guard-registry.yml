@@ -1,0 +1,118 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# guard-registry.yml — Scaffold Guard Suite Registry
+#
+# Single source of truth for all guard scripts: what they do, when they run,
+# and how they interact. Used by:
+#
+#   - guard-lib.mjs   → runAll() reads this to orchestrate guards
+#   - CI pipelines     → filter by layer/phase to build stage-appropriate checks
+#   - guard-bypass     → validates that expected guards haven't been removed
+#
+# Schema:
+#   guards.<name>:
+#     enabled:      bool          # master kill-switch
+#     script:       string        # path relative to repo root
+#     layer:        architecture | security | quality
+#     mode:         hard-block | warn-only
+#     triggers:     list          # when this guard runs
+#     timeout:      int           # max seconds before kill (default 30)
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+# ── Execution Order ─────────────────────────────────────────────────────────
+#
+# Guards run in the order listed below. The order is deliberate:
+#
+#   1. bypass      — meta-integrity first; if someone gutted a guard, stop early
+#   2. secrets     — cheapest security check; fast fail on leaked credentials
+#   3. tooling     — biome lint/format + astro check (+ build in CI)
+#   4. lockfile    — ensure lockfile stays in sync with package.json
+#   5. solid       — code quality heuristics (warn-only)
+#   6. build       — post-build artifact validation (CI only)
+#
+# Pre-commit hooks run 1–4 (fast, <15s total).
+# CI runs all six.
+
+execution_order:
+  - bypass
+  - secrets
+  - tooling
+  - lockfile
+  - solid
+  - build
+
+
+# ── Guard Definitions ──────────────────────────────────────────────────────
+
+guards:
+
+  bypass:
+    enabled: true
+    script: scripts/guard-bypass.mjs
+    layer: security
+    mode: hard-block
+    triggers:
+      - pre-commit
+      - ci
+    timeout: 15
+
+  secrets:
+    enabled: true
+    script: scripts/guard-secrets.mjs
+    layer: security
+    mode: hard-block
+    triggers:
+      - pre-commit
+      - ci
+    timeout: 20
+
+  tooling:
+    enabled: true
+    script: scripts/guard-tooling.mjs
+    layer: quality
+    mode: hard-block
+    triggers:
+      - pre-commit
+      - ci
+    timeout: 60
+
+  lockfile:
+    enabled: true
+    script: scripts/guard-lockfile.mjs --staged
+    layer: architecture
+    mode: hard-block
+    triggers:
+      - pre-commit
+    timeout: 10
+
+  solid:
+    enabled: true
+    script: scripts/guard-solid.mjs
+    layer: quality
+    mode: warn-only
+    triggers:
+      - ci
+    timeout: 20
+
+  build:
+    enabled: true
+    script: scripts/guard-build.mjs
+    layer: security
+    mode: hard-block
+    triggers:
+      - ci
+    timeout: 30
+
+
+# ── Coverage Matrix ─────────────────────────────────────────────────────────
+#
+# What each layer protects:
+#
+#   security:      secrets (leak prevention), bypass (integrity), build (artifacts)
+#   architecture:  lockfile (dependency consistency)
+#   quality:       tooling (lint/format/types), solid (SOLID heuristics)
+#
+# What each trigger phase includes:
+#
+#   pre-commit:    bypass, secrets, tooling, lockfile
+#   ci:            bypass, secrets, tooling, solid, build

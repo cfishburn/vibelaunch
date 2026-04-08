@@ -1,0 +1,44 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+
+import { pageTitle, site } from '../../config/site';
+import Layout from '../../layouts/Layout.astro';
+import { formatDate } from '../../lib/posts';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: { post },
+	}));
+}
+
+const { post } = Astro.props as { post: CollectionEntry<'blog'> };
+const { Content } = await render(post);
+---
+
+<Layout
+	title={pageTitle(post.data.title)}
+	description={post.data.description}
+	type="article"
+	publishDate={post.data.publishDate}
+	author={post.data.author}
+	image={post.data.image}
+	tags={post.data.tags}
+>
+	<section class="mx-auto max-w-3xl px-6 py-16 lg:py-20">
+		<a class="btn btn-ghost btn-sm mb-8" href="/stories">{site.stories.backLabel}</a>
+		<header class="space-y-5 border-b border-base-300 pb-8">
+			<div class="flex flex-wrap items-center gap-3 text-sm text-base-content/60">
+				<span class="badge badge-outline">{post.data.category}</span>
+				<span>{formatDate(post.data.publishDate)}</span>
+			</div>
+			<h1 class="text-5xl font-semibold tracking-tight text-balance">{post.data.title}</h1>
+			<p class="text-lg leading-8 text-base-content/75">{post.data.description}</p>
+		</header>
+		<article class="content-flow mt-10">
+			<Content />
+		</article>
+	</section>
+</Layout>

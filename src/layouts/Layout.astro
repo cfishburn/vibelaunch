@@ -1,23 +1,87 @@
+---
+import { Show, UserButton } from '@clerk/astro/react';
+import SEO from '../components/SEO.astro';
+import { site } from '../config/site';
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: string;
+	type?: 'website' | 'article';
+	publishDate?: Date;
+	author?: string;
+	tags?: string[];
+}
+
+const {
+	title = site.name,
+	description = site.tagline,
+	image,
+	type = 'website',
+	publishDate,
+	author,
+	tags,
+} = Astro.props as Props;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang={site.locale} data-theme={site.theme}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<SEO
+			title={title}
+			description={description}
+			image={image}
+			type={type}
+			publishDate={publishDate}
+			author={author}
+			tags={tags}
+		/>
 	</head>
-	<body>
-		<slot />
+	<body class="min-h-screen bg-base-200 text-base-content">
+		<div class="site-chrome">
+			<header class="border-b border-base-300/80 bg-base-100/80 backdrop-blur">
+				<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+					<a href="/" class="flex items-center gap-3 text-sm font-semibold uppercase tracking-caps">
+						<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary">
+							{site.shortName}
+						</span>
+						{site.name}
+					</a>
+					<nav class="flex items-center gap-2">
+						{site.nav.map(({ label, href }) => (
+							<a class="btn btn-ghost btn-sm" href={href}>{label}</a>
+						))}
+						<div class="ml-2 border-l border-base-300 pl-3">
+							<Show when="signed-out" client:load>
+								<div class="flex items-center gap-2">
+									<a class="btn btn-ghost btn-sm" href="/sign-in">{site.auth.signInLabel}</a>
+									<a class="btn btn-primary btn-sm" href="/sign-up">
+										{site.auth.signUpLabel}
+									</a>
+								</div>
+							</Show>
+							<Show when="signed-in" client:load>
+								<UserButton client:load />
+							</Show>
+						</div>
+					</nav>
+				</div>
+			</header>
+			<main>
+				<slot />
+			</main>
+			<footer class="border-t border-base-300/80 bg-base-100/80">
+				<div class="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-base-content/70 md:flex-row md:items-center md:justify-between">
+					<p>{site.footer.left}</p>
+					<p>{site.footer.right}</p>
+				</div>
+			</footer>
+		</div>
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

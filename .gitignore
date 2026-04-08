@@ -1,11 +1,15 @@
 # build output
 dist/
+.vercel/
 
 # generated types
 .astro/
 
 # dependencies
 node_modules/
+.pnpm-store/
+.husky/_/
+.playwright-cli/
 
 # logs
 npm-debug.log*
@@ -15,6 +19,7 @@ pnpm-debug.log*
 
 # environment variables
 .env
+.env.local
 .env.production
 
 # macOS-specific files
@@ -22,3 +27,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# clerk configuration (can include secrets)
+/.clerk/

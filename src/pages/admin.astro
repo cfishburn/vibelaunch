@@ -1,8 +1,11 @@
 ---
+export const prerender = false;
+
+import AdminPanel from '../components/AdminPanel';
 import PageTemplate from '../components/PageTemplate.astro';
 import { getSitePage } from '../lib/site-pages';
 
-const { Content, entry } = await getSitePage('home');
+const { Content, entry } = await getSitePage('admin');
 ---
 
 <PageTemplate
@@ -28,10 +31,12 @@ const { Content, entry } = await getSitePage('home');
 	</div>
 
 	{entry.data.useContentFlow ? (
-		<article class="content-flow">
+		<article class="content-flow mb-8">
 			<Content />
 		</article>
 	) : (
 		<Content />
 	)}
+
+	<AdminPanel client:load />
 </PageTemplate>
