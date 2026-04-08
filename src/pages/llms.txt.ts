@@ -2,7 +2,6 @@ import { getCollection } from 'astro:content';
 import type { APIRoute } from 'astro';
 import { site as siteConfig, toAbsoluteUrl } from '../config/site';
 import { agenticScaffoldWorkflowRoute } from '../lib/agentic-scaffold-workflow';
-import { getSuperpowerSummary, sortSuperpowers } from '../lib/superpower-docs';
 
 export const prerender = true;
 
@@ -10,7 +9,7 @@ export const GET: APIRoute = async ({ site }) => {
 	const posts = await getCollection('blog');
 	const sorted = posts.sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
 
-	const superpowers = sortSuperpowers(await getCollection('superpowers'));
+	const superpowers = await getCollection('superpowers');
 
 	const lines: string[] = [
 		`# ${siteConfig.name}`,
@@ -36,7 +35,7 @@ export const GET: APIRoute = async ({ site }) => {
 
 	for (const doc of superpowers) {
 		const url = toAbsoluteUrl(`/superpowers/${doc.id}/`, site) ?? `/superpowers/${doc.id}/`;
-		lines.push(`- [${doc.data.title}](${url}): ${getSuperpowerSummary(doc.id)}`);
+		lines.push(`- [${doc.data.title}](${url}): ${doc.data.description}`);
 	}
 
 	lines.push('');
