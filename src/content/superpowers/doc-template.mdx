@@ -1,0 +1,311 @@
+---
+file_name: doc-template.mdx
+title: Documentation System Template
+doc_type: guideline
+scope: "docs/**"
+version: 1.1.0
+last_updated: 2026-03-27
+status: active
+owners:
+  - "@Ontic-Labs"
+  - "@philippicoelho"
+tags:
+  - repository:lagrange-glass
+  - domain:documentation
+  - type:template
+related_docs: []
+---
+
+# Documentation Principles
+
+This documentation system improves AI-assisted development through an LLM-first framework. Every document serves as actionable context for both human engineers and autonomous AI agents — for code generation, review, and reasoning.
+
+Every document generated from this template **must** follow these four principles:
+
+1. **Clear Semantic Hierarchy** — Use a logical hierarchy of sections and subsections with descriptive titles. Each heading must immediately convey the section's purpose, enabling vector search tools and humans to isolate context blocks accurately. Never skip heading levels.
+
+2. **Parsing-Optimized Formatting** — Use bullet lists as the primary structure. Keep paragraphs short (3 sentences max). Use simple tables only for genuinely tabular data (up to 4 columns, no nested markdown inside cells). **Do not** use icons or emojis. Use inline JSON or YAML blocks for structured data. Consistency reduces cognitive load and improves LLM parsing accuracy.
+
+3. **Structured Metadata (Frontmatter)** — Always fill in all required metadata fields in the YAML frontmatter. Use glob patterns in the `scope` field for selective context injection. Well-defined frontmatter prevents the AI from mixing rules across different domains and enables automated filtering and indexing.
+
+4. **No Stale Content** — Do not duplicate information that lives authoritatively elsewhere (git history, code comments, CI configs). If a section cannot be kept accurate with reasonable effort, link to the source of truth instead.
+
+## Section Requirement Levels
+
+Each template section is marked with a requirement level:
+
+- **[required]** — Must be present and filled in every document. An empty required section is a validation failure.
+- **[recommended]** — Should be present for most documents. Omit only with justification (e.g., a simple utility has no domain concepts).
+- **[conditional]** — Include only when the condition applies. Leaving it out is correct when irrelevant.
+
+## Frontmatter Specification
+
+Every new document **must** start with this frontmatter structure:
+
+```yaml
+---
+file_name: [doc-name.mdx] # Must match actual filename, always kebab-case
+title: [Document Title]
+doc_type: [project | service | feature | domain | guideline | adr | runbook | api-spec]
+scope: [glob pattern, e.g. "apps/web/**" or "packages/ui-kit/**"]
+version: [semver, e.g. 1.0.0]
+last_updated: [YYYY-MM-DD]
+status: [active | deprecated | experimental | draft]
+owners:
+  - [team or individual, e.g. "@platform-team"]
+tags:
+  - domain:[e.g. auth, payments, observability]
+  - language:[e.g. typescript, python]
+  - framework:[e.g. astro, react, hono]
+  - layer:[e.g. ui, api, infra, policy]
+related_docs:
+  - ./related-doc.mdx
+---
+```
+
+### Frontmatter Field Rules
+
+- **file_name** — Must match the actual filename. Always kebab-case. Use `.mdx` for content-backed documentation and `.md` for plain repository docs.
+- **doc_type** — Choose the most specific type:
+  - `project` — Top-level project or workspace documentation.
+  - `service` — A deployable service or application.
+  - `feature` — A user-facing feature or capability.
+  - `domain` — Domain model, business rules, or bounded context.
+  - `guideline` — Standards, conventions, or process documentation.
+  - `adr` — Architecture Decision Record for decisions with lasting consequences.
+  - `runbook` — Operational procedures for incidents, deployments, or maintenance.
+  - `api-spec` — API surface documentation (endpoints, contracts, auth).
+- **scope** — Must be a valid glob pattern relative to the repo root. Tooling uses this for automated context injection — an inaccurate scope means the doc gets loaded in the wrong context or not at all.
+- **version** — Follow semver:
+  - Patch (0.0.x): Typo fixes, clarifications, formatting. No semantic change.
+  - Minor (0.x.0): New sections added, examples expanded, scope updated.
+  - Major (x.0.0): Structural redesign, scope change, or doc-type change.
+- **status**:
+  - `draft` — Work in progress, not yet reviewed.
+  - `experimental` — Reviewed but subject to significant change.
+  - `active` — Stable and authoritative.
+  - `deprecated` — Superseded. Must include a pointer to the replacement in `related_docs`.
+- **owners** — At least one owner required. Use team handles or GitHub usernames.
+- **tags** — Namespaced tags. At minimum include `domain:`. Add `language:`, `framework:`, and `layer:` when applicable.
+- **related_docs** — Relative paths to documents with essential adjacent context. Keep curated (3-5 max). Tooling may auto-include related docs in the context window.
+
+# Document Body Template
+
+Everything below this line is the template to be filled when creating a new document. Copy from here and replace the bracketed placeholders.
+
+# [Document Title]
+
+## Overview [required]
+
+[2-4 sentences: what this project/module/service does, why it exists, and how it fits into the larger system. Write this as if it were the only paragraph someone — or an AI agent — would read before deciding whether this document is relevant.]
+
+## Goals [required]
+
+- [What this project/module **should** do and prioritize.]
+- [Each goal should be concrete and verifiable, not aspirational.]
+
+## Non-Goals [required]
+
+- [What is **explicitly out of scope**.]
+- [Be specific. Example: "This service does not handle user authentication — that is the responsibility of the API Gateway (`./api-gateway.md`)."]
+- [Non-goals are boundaries. They prevent both humans and AI agents from making incorrect assumptions about responsibility.]
+
+## Tech Stack [recommended]
+
+- Language: [e.g., TypeScript 5.x]
+- Runtime: [e.g., Node.js 22]
+- Framework: [e.g., Astro 5, Hono 4]
+- Database: [e.g., PostgreSQL 16 via Supabase]
+- Infrastructure: [e.g., AWS CDK, Vercel]
+- Key Libraries: [e.g., Zod, SpiceDB client, Drizzle ORM]
+
+Include version constraints only when a minimum version is required for a specific feature.
+
+## High-Level Architecture [recommended]
+
+- [Main components/modules and their responsibilities.]
+- [Boundaries between components: what calls what, through which interface (direct call, HTTP, event, queue).]
+- [External integrations (APIs, queues, databases, third-party services).]
+- [Typical request/processing flow in 3-7 bullet points.]
+- [Security boundaries and trust zones when applicable.]
+
+Example flow:
+
+- Client sends request to `/api/orders`.
+- `OrderController` validates input via `OrderSchema` (Zod).
+- `OrderService` orchestrates the use case, calling `OrderRepository` for persistence and `PaymentGateway` for charging.
+- On success, an `OrderCreated` event is published to the event bus.
+- `NotificationService` listens for `OrderCreated` and sends confirmation email.
+
+## Domain Concepts [conditional]
+
+Include when the module has domain-specific terminology, business rules, or data models that are not self-evident from the code.
+
+- **[ConceptA]** — What it represents, important fields, main constraints, and lifecycle (created -> confirmed -> fulfilled -> archived).
+- **[ConceptB]** — Relation to ConceptA, typical state transitions, edge cases.
+
+Include simple JSON examples for non-trivial data structures:
+
+```json
+{
+  "orderId": "ord_abc123",
+  "status": "confirmed",
+  "items": [{ "sku": "WIDGET-01", "quantity": 2 }],
+  "total": { "amount": 4999, "currency": "BRL" }
+}
+```
+
+## External Dependencies and Contracts [conditional]
+
+Include when the module depends on or exposes contracts to external systems. AI agents modifying code that interacts with an external system **must** consult the referenced contract.
+
+For each dependency:
+- **[Dependency Name]** (e.g., Stripe API, Warehouse Event Bus)
+  - Direction: [inbound | outbound | bidirectional]
+  - Protocol: [REST, gRPC, event/queue, webhook]
+  - Contract reference: [link to schema, OpenAPI spec, or event definition]
+  - Failure mode: [what happens when unavailable — retry, circuit breaker, graceful degradation]
+  - Owner: [who to contact when the contract changes]
+
+## Coding Conventions [recommended]
+
+- Project structure:
+  - [e.g., `src/domain/` — entities, value objects, domain events]
+  - [e.g., `src/app/` — use cases, application services]
+  - [e.g., `src/infra/` — repositories, HTTP clients, framework adapters]
+- Naming:
+  - [e.g., `*Service` for orchestration, `*Repository` for persistence, `*Controller` for HTTP handlers, `*Schema` for validation]
+  - [File naming convention: kebab-case, PascalCase, etc.]
+- Error handling:
+  - [e.g., Domain errors extend `DomainError` base class. HTTP errors are mapped at the controller layer. Never throw raw strings.]
+- Logging:
+  - [e.g., Structured JSON logs. Always include `correlationId`. Log at `info` for business events, `error` for failures, `debug` for development only.]
+- Imports:
+  - [Preferred import style (named vs default, path aliases).]
+  - [Dependency direction rules (e.g., domain never imports from infra).]
+
+## Invariants and Critical Rules [required]
+
+Rules that **must never be broken**. AI agents should treat violations of these rules as blocking errors.
+
+Each invariant follows this structure:
+
+- **[Rule name]**: [Clear, unambiguous statement of the invariant.]
+  - Violated when: [Concrete scenario that would break this rule.]
+  - Consequence: [What goes wrong — data corruption, financial loss, security breach, etc.]
+  - Enforcement: [How currently enforced — database constraint, guard script, test, type system.]
+
+Example:
+
+```
+- **No duplicate charges**: A user must never be charged twice for the same `orderId`.
+  - Violated when: The payment flow retries without checking for an existing successful charge.
+  - Consequence: Financial loss and customer trust damage.
+  - Enforcement: Idempotency key on the Stripe API call + unique constraint on `payments.order_id`.
+```
+
+## Testing Conventions [recommended]
+
+- Framework: [e.g., Vitest]
+- Style: [e.g., Given/When/Then structure in test descriptions]
+- Mocking policy: [e.g., Mock external dependencies (HTTP, database), never mock domain logic]
+- Coverage expectations: [e.g., Domain layer: 90%+, Application layer: 80%+, Infrastructure: integration tests only]
+- Fixture conventions: [e.g., Use factory functions in `tests/fixtures/`, never hardcode test data inline]
+
+## AI Agent Behavior Guidelines [required]
+
+When operating within this domain, AI agents must obey these generation rules:
+
+- **No placeholders** — When generating or refactoring code, do not omit parts of a file with comments like `// rest of the code here`. Provide the complete, ready-to-use artifact unless explicitly instructed otherwise.
+- **Test-driven** — Any behavioral change must be accompanied or preceded by the respective test update.
+- **Contract preservation** — Do not alter public interface contracts (APIs, exported types) unless explicitly requested.
+- **Invariant awareness** — Before modifying code, check the "Invariants and Critical Rules" section. Flag potential violations before proceeding.
+
+[Add project-specific AI rules here when applicable.]
+
+## Tasks for AI Assistance [required]
+
+Describe common tasks expected of AI agents working on this codebase. Each task should be specific enough to serve as an implicit prompt.
+
+- **[Task name]**:
+  - Input: [What information the AI needs to start.]
+  - Steps: [Ordered list of actions to perform.]
+  - Constraints: [Rules the AI must follow during execution.]
+  - Validation: [How to verify the task was completed correctly.]
+
+### Standard Tasks
+
+- **Create new documentation**:
+  - Input: Module/service name, its purpose, and its scope glob.
+  - Steps: Generate a document following this template with all required sections filled.
+  - Constraints: Must not leave required sections empty. Must use existing tag namespaces.
+  - Validation: All frontmatter fields present and valid. No placeholder text in required sections. `scope` glob matches actual file paths.
+- **Add or modify an endpoint**:
+  - Input: Endpoint path, HTTP method, request/response shapes, auth requirements.
+  - Steps: Create/update handler, add validation schema, update route registration, add tests.
+  - Constraints: Must follow existing error handling patterns. Must respect auth middleware.
+  - Validation: Tests pass, endpoint responds correctly, no regressions in existing endpoints.
+- **Implement or refactor a use case**:
+  - Input: Use case description, acceptance criteria.
+  - Keep: [What must remain true / backwards-compatible.]
+  - Change: [What is allowed to evolve.]
+  - Validation: Existing tests still pass, new tests cover the changes.
+- **Write or adjust tests**:
+  - Follow the testing conventions described above.
+  - Always run the existing test suite before submitting changes.
+
+## Known Pitfalls and Anti-Patterns [recommended]
+
+Each entry explains the problem and the preferred alternative:
+- **[Anti-pattern name]**: [What developers or AI agents tend to do wrong.]
+  - Why it is harmful: [Concrete consequence.]
+  - Preferred approach: [What to do instead, with a brief example if helpful.]
+
+Example:
+```
+- **Importing domain logic from infrastructure modules**:
+  - Why it is harmful: Creates circular dependencies and makes the domain untestable in isolation.
+  - Preferred approach: Define interfaces in the domain layer, implement in infra, inject via constructor.
+```
+
+## Architecture Decision Records [conditional]
+
+Include only for decisions with lasting architectural consequences that are not obvious from the code. Do not use as a changelog — git history serves that purpose.
+
+Each entry captures the context, the decision, and its consequences:
+
+- **[YYYY-MM-DD] — [Decision title]**
+  - Context: [What situation or problem prompted this decision.]
+  - Decision: [What was decided and why.]
+  - Alternatives considered: [What else was evaluated and why it was rejected.]
+  - Consequences: [Trade-offs accepted, what changed, what to watch for.]
+
+Example:
+
+- **2026-02-15 — Migrated from REST to event-driven communication between Billing and Notifications**
+  - Context: REST calls from Billing to Notifications created tight coupling and cascading failures during Notification service deployments.
+  - Decision: Replaced synchronous HTTP calls with an event bus. Billing publishes `InvoiceCreated` events; Notifications subscribes.
+  - Alternatives considered: Retry with exponential backoff (rejected: only masks the coupling), shared database (rejected: violates service boundaries).
+  - Consequences: Reduced coupling and improved resilience. Introduced eventual consistency — notifications may be delayed by up to 30 seconds. Added dead-letter queue monitoring as a new operational requirement.
+
+# Document Maintenance Rules
+
+- When source files matching this document's `scope` undergo significant changes, this document **must** be reviewed and updated in the same PR/commit.
+- Bump `version` according to the semver rules described in the frontmatter specification.
+- Update `last_updated` on every edit.
+- If the described system is being replaced, set `status: deprecated` and add the replacement document to `related_docs`.
+- Documents with `status: draft` must not remain in draft for more than 2 weeks without review.
+
+# Quality Checklist
+
+A document is considered complete when:
+
+- All frontmatter fields are filled and valid
+- All `[required]` sections are present with substantive content
+- All `[recommended]` sections are present or explicitly justified as omitted
+- Goals and non-goals are specific and verifiable
+- Invariants include violation scenarios and enforcement mechanisms
+- AI agent tasks include input, steps, constraints, and validation
+- Examples reflect real system behavior
+- `last_updated` and `version` are accurate
+- Related documents are linked when relevant

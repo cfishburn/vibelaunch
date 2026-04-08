@@ -13,6 +13,7 @@ pnpm run guard:pre-commit    # what husky runs: bypass → secrets → tooling �
 pnpm run guard:ci             # what CI runs: bypass → secrets → tooling → solid → build
 pnpm run guard:secrets        # individual guard
 pnpm run guard:solid -- --warn-only
+pnpm run smoke:public         # build-output public route smoke test (run after build)
 ```
 
 ### Guard inventory
@@ -21,7 +22,7 @@ pnpm run guard:solid -- --warn-only
 |-------|-------|------|:----------:|:--:|----------------|
 | bypass | security | hard-block | x | x | Meta-integrity: hardcoded exits, bypass comments, suspicious commits |
 | secrets | security | hard-block | x | x | Hardcoded secrets, API keys, private keys in source |
-| tooling | quality | hard-block | x | x | Biome lint/format + Astro type check (+ build in CI) |
+| tooling | quality | hard-block | x | x | Biome lint/format + Astro type check (+ build and public smoke test in CI) |
 | lockfile | architecture | hard-block | x | | pnpm-lock.yaml stays in sync with package.json |
 | solid | quality | warn-only | | x | SOLID/DRY heuristics: file length, god components, fat interfaces |
 | build | security | hard-block | | x | Post-build artifacts: source maps, leaked secrets, oversized chunks |

@@ -1,0 +1,93 @@
+---
+import { BookIcon, Icon, ShieldCheckIcon, TerminalIcon } from '../components/icons';
+import PageTemplate from '../components/PageTemplate.astro';
+import PromptWorkflow from '../components/PromptWorkflow';
+import { agenticScaffoldWorkflow } from '../lib/agentic-scaffold-workflow';
+import { superpowersRoute } from '../lib/superpower-docs';
+---
+
+<PageTemplate
+	eyebrow="Exit plan"
+	title="How to get out of vibe coding without throwing away the useful parts"
+	description="A prompt-by-prompt workflow for turning an AI-assisted prototype into a reusable, maintainable starter instead of a haunted codebase."
+	metaTitle="How to get out of vibe coding without throwing away the useful parts"
+>
+	<div slot="actions">
+		<a class="btn btn-primary" href="/">Back home</a>
+		<a class="btn btn-outline" href={superpowersRoute}>Open docs library</a>
+		<a class="btn btn-ghost gap-2" href="/app">
+			<Icon icon={ShieldCheckIcon} className="h-4 w-4" />
+			Inspect the auth demo
+		</a>
+	</div>
+
+	<section class="mb-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+		<div
+			class="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15"
+			data-reveal="vertical"
+			data-reveal-order="1"
+		>
+			<div class="flex items-center gap-2">
+				<Icon icon={BookIcon} className="h-5 w-5 text-primary" />
+				<p class="eyebrow">What this page is</p>
+			</div>
+			<div class="mt-4 space-y-4 text-base leading-8 text-base-content/75">
+				<p>
+					This page turns the scaffolding process we used here into a repeatable method. Each step
+					includes a sample prompt, the result you should expect from a strong coding agent, and the
+					checks that keep the project from drifting back into chaos.
+				</p>
+				<p>
+					The prompts are written to be copyable, but the real value is the sequence: stack first,
+					then tooling, then architecture, then content, then fork safety, and finally the routines
+					that keep the repo usable after the first burst of AI-generated enthusiasm wears off.
+				</p>
+			</div>
+		</div>
+
+		<div
+			class="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15"
+			data-reveal="horizontal"
+			data-reveal-order="2"
+		>
+			<div class="flex items-center gap-2">
+				<Icon icon={TerminalIcon} className="h-5 w-5 text-primary" />
+				<p class="eyebrow">How to use it</p>
+			</div>
+			<ol class="mt-4 space-y-3 text-sm leading-7 text-base-content/75">
+				<li>Use the prompts as starting points, not magic spells.</li>
+				<li>Compare the output to the expected result before you let the agent keep freelancing.</li>
+				<li>Run the verification checks after every meaningful stage.</li>
+				<li>
+					End with the documentation loop: durable planning docs up front and selective devlogs while
+					active work is still changing.
+				</li>
+			</ol>
+		</div>
+	</section>
+
+	<PromptWorkflow client:load steps={agenticScaffoldWorkflow} />
+
+	<section
+		class="mt-10 rounded-card-lg border border-base-300 bg-base-100 p-8 shadow-xl shadow-base-300/15"
+		data-reveal="vertical"
+	>
+		<div class="flex items-center gap-2">
+			<Icon icon={ShieldCheckIcon} className="h-5 w-5 text-primary" />
+			<p class="eyebrow">After the playbook</p>
+		</div>
+		<h2 class="mt-4 text-3xl font-semibold tracking-tight">
+			Keep the fork healthy with the documentation standards
+		</h2>
+		<p class="mt-4 max-w-3xl leading-8 text-base-content/75">
+			The playbook explains the order of operations. The documentation standards keep the repo from
+			drifting after day one: use the durable doc template to plan non-trivial work, and use the devlog
+			standard selectively when implementation context would otherwise vanish into the commit history.
+		</p>
+		<div class="mt-6 flex flex-wrap gap-3">
+			<a class="btn btn-primary" href={superpowersRoute}>Open the docs library</a>
+			<a class="btn btn-outline" href="/superpowers/doc-template">Read the doc template</a>
+			<a class="btn btn-ghost" href="/superpowers/dev-log">Read the devlog standard</a>
+		</div>
+	</section>
+</PageTemplate>

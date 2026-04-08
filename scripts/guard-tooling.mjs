@@ -41,6 +41,7 @@ const STEPS = {
 		{ label: 'Biome project check', command: 'pnpm', args: ['run', 'tooling:check'] },
 		{ label: 'Astro type and content check', command: 'pnpm', args: ['run', 'check'] },
 		{ label: 'Astro production build', command: 'pnpm', args: ['run', 'build'] },
+		{ label: 'Public route smoke test', command: 'pnpm', args: ['run', 'smoke:public'] },
 	],
 };
 

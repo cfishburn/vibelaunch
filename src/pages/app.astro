@@ -1,7 +1,10 @@
 ---
 export const prerender = false;
 
+import { Icon, ShieldCheckIcon } from '../components/icons';
+import PageActions from '../components/PageActions.astro';
 import PageTemplate from '../components/PageTemplate.astro';
+import SitePageContent from '../components/SitePageContent.astro';
 import ViewerPanel from '../components/ViewerPanel';
 import { isAdminUserId } from '../lib/auth';
 import { getSitePage } from '../lib/site-pages';
@@ -17,30 +20,15 @@ const { Content, entry } = await getSitePage('app');
 	description={entry.data.description}
 	metaTitle={entry.data.metaTitle}
 >
-	<div slot="actions">
-		{entry.data.actions.map((action) => (
-			<a
-				class:list={[
-					'btn',
-					action.variant === 'primary' && 'btn-primary',
-					action.variant === 'outline' && 'btn-outline',
-					action.variant === 'ghost' && 'btn-ghost',
-				]}
-				href={action.href}
-			>
-				{action.label}
+	<PageActions slot="actions" actions={entry.data.actions}>
+		{isAdmin ? (
+			<a class="btn btn-outline gap-2" href="/admin">
+				<Icon icon={ShieldCheckIcon} className="h-4 w-4" />
+				Open admin page
 			</a>
-		))}
-		{isAdmin ? <a class="btn btn-outline" href="/admin">Open admin page</a> : null}
-	</div>
-
-	{entry.data.useContentFlow ? (
-		<article class="content-flow mb-8">
-			<Content />
-		</article>
-	) : (
-		<Content />
-	)}
+		) : null}
+	</PageActions>
+	<SitePageContent Content={Content} useContentFlow={entry.data.useContentFlow} class="mb-8" />
 
 	<ViewerPanel client:load />
 </PageTemplate>

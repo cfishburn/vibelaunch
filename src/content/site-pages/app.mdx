@@ -1,19 +1,19 @@
 ---
-eyebrow: Member area
-title: Hello world behind auth
-metaTitle: Member area
-description: This page is protected by Clerk middleware, and the island below reads its data through an Astro API route.
+eyebrow: Demo surface
+title: "Auth demo: member page"
+metaTitle: Member demo
+description: This route is protected by Clerk middleware, and the island below reads its data through an Astro API route.
 useContentFlow: true
 actions:
-  - label: Open viewer API
+  - label: Open demo API
     href: /api/viewer.json
     variant: primary
 ---
 
-The member route demonstrates the scaffold's BFF pattern.
+This member route is a reference implementation, not product functionality.
 
 - Clerk protects the page before Astro renders it.
 - The React island fetches its data from an Astro API route, not directly from Clerk's backend.
 - The browser never needs direct access to any server-side service.
 
-This is the pattern the AI guardrails document as the correct way to add protected surfaces. Fork the scaffold, change `src/config/site.ts`, and build from here.
+Fork the scaffold, replace the branding in `src/config/site.ts`, and use this pattern when you add your own protected surfaces.

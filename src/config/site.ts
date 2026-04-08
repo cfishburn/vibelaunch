@@ -5,41 +5,53 @@
  * or crawler-facing routes one by one.
  */
 
+import { agenticScaffoldWorkflowRoute } from '../lib/agentic-scaffold-workflow';
+
 export const site = {
 	name: 'Vibe Launch',
 	shortName: 'VL',
 	domain: 'vibelaunch.ai',
 	locale: 'en',
-	theme: 'corporate',
-	tagline: 'Ship AI-friendly projects that your tools already understand.',
+	theme: 'light',
+	darkTheme: 'dark',
+	tagline: 'Keep the speed. Lose the vibe-coding entropy.',
 	description:
-		'Open-source Astro starter with AI guardrails, guard scripts, design tokens, and content collections — so AI coding assistants produce code that fits your codebase on the first try.',
+		'Open-source Astro starter and playbook for teams escaping Lovable, Bolt, Replit, or prompt-sprawl before the repo turns feral. Guardrails, docs, motion tokens, design tokens, and a small auth/BFF reference implementation included.',
 	defaultAuthor: 'Vibe Launch',
 	defaultImage: undefined as string | undefined,
+	seo: {
+		robots: 'index, follow, max-image-preview:large',
+		ogLocale: 'en_US',
+		themeColorLight: '#f5f5f7',
+		themeColorDark: '#23242b',
+		llmsIndexPath: '/llms.txt',
+	},
 	auth: {
 		signInLabel: 'Sign in',
 		signUpLabel: 'Create account',
 	},
 	footer: {
-		left: 'Ship AI-friendly projects that your tools already understand.',
-		right: 'Astro, Clerk, TanStack Query, DaisyUI, Vercel, and Supabase.',
+		left: 'A way out of vibe-coding chaos that does not require starting over from scratch.',
+		right: 'Astro, Clerk, TanStack Query, DaisyUI, Vercel, Supabase.',
 	},
 	llms: {
 		fullContentLabel: 'Full Content',
 		fullContentDescription: 'Complete text of all published stories.',
 	},
 	stories: {
-		indexEyebrow: 'Story index',
-		indexTitle: 'How to scaffold a project for reuse with AI.',
+		indexEyebrow: 'Field notes',
+		indexTitle: 'What you learn after the vibes stop being fun.',
 		indexDescription:
-			'Each post covers a piece of the scaffold: AI guardrails, design tokens, guard scripts, and the patterns that make AI-generated code fit your codebase.',
+			'Notes from the part nobody advertises: taking an AI-assisted prototype and turning it into a codebase that does not punish the next person who touches it.',
 		backLabel: 'Back to stories',
-		openLabel: 'Open',
+		openLabel: 'Read note',
 	},
 	nav: [
-		{ label: 'Home', href: '/' },
-		{ label: 'App', href: '/app' },
-		{ label: 'Stories', href: '/stories' },
+		{ label: 'Home', href: '/', icon: 'home' },
+		{ label: 'Exit plan', href: agenticScaffoldWorkflowRoute, icon: 'playbook' },
+		{ label: 'Standards', href: '/superpowers', icon: 'docs' },
+		{ label: 'Demo app', href: '/app', icon: 'app' },
+		{ label: 'Field notes', href: '/stories', icon: 'stories' },
 	],
 } as const;
 

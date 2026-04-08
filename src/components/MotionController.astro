@@ -1,0 +1,73 @@
+<script is:inline>
+	(() => {
+		const selector = '[data-reveal]';
+		const root = document.documentElement;
+		const visibleState = 'visible';
+
+		function markVisible(element) {
+			element.setAttribute('data-reveal-state', visibleState);
+		}
+
+		function revealAll() {
+			document.querySelectorAll(selector).forEach((element) => {
+				markVisible(element);
+			});
+		}
+
+		function setupRevealObserver() {
+			try {
+				if (root.getAttribute('data-motion') === 'reduced') {
+					revealAll();
+					return;
+				}
+
+				if (!('IntersectionObserver' in window)) {
+					revealAll();
+					return;
+				}
+
+				if (!window.__vlRevealObserver) {
+					window.__vlRevealObserver = new IntersectionObserver(
+						(entries) => {
+							for (const entry of entries) {
+								if (!entry.isIntersecting) {
+									continue;
+								}
+
+								markVisible(entry.target);
+								window.__vlRevealObserver.unobserve(entry.target);
+							}
+						},
+						{
+							threshold: 0.18,
+							rootMargin: '0px 0px -10% 0px',
+						},
+					);
+				}
+
+				document.querySelectorAll(selector).forEach((element) => {
+					if (element.getAttribute('data-reveal-state') === visibleState) {
+						return;
+					}
+
+					window.__vlRevealObserver.observe(element);
+				});
+			} catch {
+				revealAll();
+			}
+		}
+
+		if (!window.__vlRevealInit) {
+			window.__vlRevealInit = true;
+			document.addEventListener('astro:page-load', setupRevealObserver);
+
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', setupRevealObserver, { once: true });
+			} else {
+				queueMicrotask(setupRevealObserver);
+			}
+		} else {
+			setupRevealObserver();
+		}
+	})();
+</script>

@@ -1,0 +1,16 @@
+---
+import PageTemplate from '../components/PageTemplate.astro';
+---
+
+<PageTemplate
+	eyebrow="Not found"
+	title="That page is not part of the scaffold"
+	description="The route you requested does not exist in this starter. Head back to the playbook, docs library, or home page."
+	metaTitle="Page not found"
+>
+	<div slot="actions">
+		<a class="btn btn-primary" href="/">Back home</a>
+		<a class="btn btn-outline" href="/how-to-scaffold-an-agentic-coding-project">Open the playbook</a>
+		<a class="btn btn-ghost" href="/superpowers">Open docs library</a>
+	</div>
+</PageTemplate>

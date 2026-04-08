@@ -5,10 +5,10 @@ Thanks for considering a contribution to Vibe Launch. This project is an opinion
 ## Getting started
 
 ```sh
-git clone https://github.com/YOUR_ORG/scaffold.git
-cd scaffold
+git clone <your-fork-url>
+cd <your-repo-directory>
 pnpm install
-cp .env.example .env
+cp .env.example .env.local
 pnpm dev
 ```
 
@@ -32,6 +32,7 @@ You can run the full suite manually:
 ```sh
 pnpm guard:pre-commit   # What the hook runs
 pnpm guard:ci           # Full CI suite (adds SOLID heuristics + build check)
+pnpm smoke:public       # Run after pnpm build to verify key public routes
 ```
 
 ## Code style
@@ -66,6 +67,25 @@ All brand strings, nav links, footer copy, and SEO defaults live in `src/config/
 
 Both schemas are typed in `src/content.config.ts`. Add new fields as `.optional()` or `.default()` to keep existing content valid.
 
+## Documentation workflow
+
+The repo includes two documentation patterns under `src/content/superpowers/`:
+
+- **`doc-template.mdx`** is for durable documentation that should outlive the current task.
+- **`dev-log.mdx`** is for active implementation context that is useful during development, debugging, and short-term post-merge support.
+
+Use `doc-template.mdx` when you are adding or revising lasting docs such as feature docs, guidelines, runbooks, or ADR-style references.
+
+Use `dev-log.mdx` when:
+
+- work spans multiple sessions
+- there are meaningful dead ends or tradeoffs worth preserving
+- commit history alone would not explain why a technical choice was made
+
+Do not create devlogs for tiny edits, obvious fixes, or changes that are already fully explained by the code and commit history.
+
+If you do create one, put the real work log under `docs/devlog/` and use `src/content/superpowers/dev-log.mdx` as the standard.
+
 ## Adding pages and routes
 
 - Static page: `src/pages/my-page.astro` using `Layout` wrapper
@@ -79,7 +99,10 @@ Both schemas are typed in `src/content.config.ts`. Add new fields as `.optional(
 2. Make your changes
 3. Ensure `pnpm guard:ci` passes (or at minimum `pnpm guard:pre-commit`)
 4. Ensure `pnpm build` succeeds
-5. Open a PR with a clear description of what changed and why
+5. Include evidence: what you ran, what you visually verified, and how to roll back
+6. Open a PR with a clear description of what changed and why
+
+Direct pushes to `main` are the wrong default for this repo. Use a branch, open a PR, and let the guard suite plus review do their job.
 
 ## What makes a good contribution
 

@@ -1,18 +1,77 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/700.css";
+
 @import "tailwindcss";
 @plugin "daisyui" {
-	themes:
-		light,
-		corporate --default;
+	themes: false;
+}
+
+:root {
+	--motion-duration-fast: 180ms;
+	--motion-duration-base: 260ms;
+	--motion-duration-slow: 420ms;
+	--motion-duration-page: 320ms;
+	--motion-stagger-step: 70ms;
+	--motion-distance-y: 18px;
+	--motion-distance-x: 28px;
+	--motion-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+	--motion-ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Custom monochromatic themes ── */
+[data-theme="light"] {
+	--color-base-100: oklch(0.985 0.002 260); /* near-white */
+	--color-base-200: oklch(0.965 0.003 260); /* subtle warm gray */
+	--color-base-300: oklch(0.91 0.004 260); /* borders */
+	--color-base-content: oklch(0.205 0.015 260); /* near-black */
+	--color-primary: oklch(0.37 0.02 260); /* dark slate — sophisticated accent */
+	--color-primary-content: oklch(0.985 0.002 260);
+	--color-secondary: oklch(0.52 0.015 260); /* mid gray */
+	--color-secondary-content: oklch(0.985 0.002 260);
+	--color-accent: oklch(0.52 0.015 260);
+	--color-accent-content: oklch(0.985 0.002 260);
+	--color-neutral: oklch(0.27 0.015 260);
+	--color-neutral-content: oklch(0.93 0.004 260);
+	--color-info: oklch(0.52 0.06 250);
+	--color-success: oklch(0.52 0.1 155);
+	--color-warning: oklch(0.6 0.12 75);
+	--color-error: oklch(0.52 0.12 25);
+	--radius-btn: 0.5rem;
+	--radius-box: 0.75rem;
+	color-scheme: light;
+}
+
+[data-theme="dark"] {
+	--color-base-100: oklch(0.18 0.01 260); /* deep charcoal */
+	--color-base-200: oklch(0.145 0.008 260); /* darker surface */
+	--color-base-300: oklch(0.25 0.01 260); /* borders */
+	--color-base-content: oklch(0.88 0.005 260); /* soft white text */
+	--color-primary: oklch(0.75 0.015 260); /* light slate accent */
+	--color-primary-content: oklch(0.145 0.008 260);
+	--color-secondary: oklch(0.55 0.01 260); /* mid gray */
+	--color-secondary-content: oklch(0.145 0.008 260);
+	--color-accent: oklch(0.55 0.01 260);
+	--color-accent-content: oklch(0.145 0.008 260);
+	--color-neutral: oklch(0.22 0.01 260);
+	--color-neutral-content: oklch(0.85 0.005 260);
+	--color-info: oklch(0.6 0.06 250);
+	--color-success: oklch(0.6 0.1 155);
+	--color-warning: oklch(0.65 0.12 75);
+	--color-error: oklch(0.6 0.12 25);
+	--radius-btn: 0.5rem;
+	--radius-box: 0.75rem;
+	color-scheme: dark;
 }
 
 @theme {
 	--radius-card: 1.75rem;
 	--radius-card-lg: 2rem;
 	--letter-spacing-caps: 0.2em;
-}
-
-:root {
-	color-scheme: light;
+	--font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+	--font-heading: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;
+	--font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 html,
@@ -22,18 +81,30 @@ body {
 }
 
 body {
-	background:
-		radial-gradient(
-			circle at top left,
-			color-mix(in srgb, var(--color-primary) 10%, white) 0%,
-			transparent 35%
-		),
-		radial-gradient(
-			circle at top right,
-			color-mix(in srgb, var(--color-secondary) 8%, white) 0%,
-			transparent 28%
-		),
-		var(--color-base-200);
+	background: var(--color-base-200);
+}
+
+.motion-lift {
+	transition:
+		transform var(--motion-duration-fast) var(--motion-ease-standard),
+		border-color var(--motion-duration-fast) var(--motion-ease-standard),
+		box-shadow var(--motion-duration-fast) var(--motion-ease-standard),
+		background-color var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.motion-lift:hover,
+.motion-lift:focus-visible {
+	transform: translateY(-2px);
+}
+
+/* ── Heading font applied to all headings ── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-heading);
 }
 
 .site-chrome {
@@ -41,11 +112,51 @@ body {
 }
 
 .eyebrow {
+	font-family: var(--font-heading);
 	font-size: 0.75rem;
 	font-weight: 700;
 	letter-spacing: 0.24em;
 	text-transform: uppercase;
-	color: color-mix(in srgb, var(--color-primary) 82%, black);
+	color: var(--color-primary);
+}
+
+html[data-motion="ready"] [data-reveal] {
+	opacity: 0;
+	transform: translate3d(var(--reveal-x, 0px), var(--reveal-y, 0px), 0);
+	transition:
+		opacity var(--motion-duration-slow) var(--motion-ease-emphasis),
+		transform var(--motion-duration-slow) var(--motion-ease-emphasis);
+	transition-delay: var(--reveal-delay, 0ms);
+	will-change: opacity, transform;
+}
+
+html[data-motion="ready"] [data-reveal="vertical"] {
+	--reveal-y: var(--motion-distance-y);
+}
+
+html[data-motion="ready"] [data-reveal="horizontal"] {
+	--reveal-x: var(--motion-distance-x);
+}
+
+html[data-motion="ready"] [data-reveal-order="1"] {
+	--reveal-delay: calc(var(--motion-stagger-step) * 1);
+}
+
+html[data-motion="ready"] [data-reveal-order="2"] {
+	--reveal-delay: calc(var(--motion-stagger-step) * 2);
+}
+
+html[data-motion="ready"] [data-reveal-order="3"] {
+	--reveal-delay: calc(var(--motion-stagger-step) * 3);
+}
+
+html[data-motion="ready"] [data-reveal-order="4"] {
+	--reveal-delay: calc(var(--motion-stagger-step) * 4);
+}
+
+html[data-motion="ready"] [data-reveal][data-reveal-state="visible"] {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
 }
 
 .content-flow {
@@ -53,7 +164,9 @@ body {
 	gap: 1.5rem;
 	font-size: 1.0625rem;
 	line-height: 1.9;
-	color: color-mix(in srgb, var(--color-base-content) 86%, white);
+	color: color-mix(in srgb, var(--color-base-content) 82%, transparent);
+	word-break: break-word;
+	overflow-wrap: break-word;
 }
 
 .content-flow h2,
@@ -92,4 +205,88 @@ body {
 	text-decoration: underline;
 	text-decoration-thickness: 0.08em;
 	text-underline-offset: 0.18em;
+}
+
+/* ── Inline code ── */
+.content-flow code:not(pre code),
+p code,
+li code,
+td code,
+dt code,
+dd code {
+	padding: 0.15em 0.4em;
+	border-radius: 0.3em;
+	font-size: 0.875em;
+	font-family: var(--font-mono);
+	background: color-mix(in srgb, var(--color-base-300) 60%, transparent);
+	color: var(--color-base-content);
+}
+
+/* ── Fenced code blocks (Shiki dual-theme) ── */
+.content-flow pre,
+.astro-code {
+	margin: 0;
+	padding: 1.25rem 1.5rem;
+	border-radius: var(--radius-card);
+	border: 1px solid var(--color-base-300);
+	font-size: 0.875rem;
+	line-height: 1.7;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Shiki dual-theme: show light colors by default, dark when data-theme="dark" */
+[data-theme="dark"] .astro-code,
+[data-theme="dark"] .astro-code span {
+	/* biome-ignore lint/complexity/noImportantStyles: Shiki injects inline token colors, so dark-theme overrides must win. */
+	color: var(--shiki-dark) !important;
+	/* biome-ignore lint/complexity/noImportantStyles: Shiki injects inline backgrounds, so dark-theme overrides must win. */
+	background-color: var(--shiki-dark-bg) !important;
+}
+
+.content-flow pre code {
+	padding: 0;
+	border-radius: 0;
+	font-size: inherit;
+	background: transparent;
+	color: inherit;
+}
+
+/* ── Blockquotes ── */
+.content-flow blockquote {
+	padding-left: 1.25rem;
+	border-left: 3px solid var(--color-primary);
+	color: color-mix(in srgb, var(--color-base-content) 70%, transparent);
+	font-style: italic;
+}
+
+.superpower-prose > h1:first-child {
+	display: none;
+}
+
+.superpower-prose hr {
+	margin: 2rem 0;
+	border: 0;
+	border-top: 1px solid var(--color-base-300);
+}
+
+.superpower-prose h2,
+.superpower-prose h3 {
+	scroll-margin-top: 7rem;
+}
+
+.superpower-prose strong {
+	color: var(--color-base-content);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.motion-lift {
+		transition: none;
+	}
+
+	html[data-motion="ready"] [data-reveal] {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
 }
