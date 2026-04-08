@@ -8,7 +8,7 @@ const posts = await getAllPosts();
 
 <Layout
 	title={pageTitle('Stories')}
-	description="Starter story index powered by Astro content collections."
+	description="Field notes from taking AI-assisted prototypes and turning them into codebases people can actually live with."
 >
 	<section class="mx-auto max-w-5xl px-6 py-16 lg:py-20">
 		<div class="max-w-3xl space-y-4">
@@ -23,16 +23,16 @@ const posts = await getAllPosts();
 					href={`/stories/${post.id}/`}
 					class="rounded-3xl border border-base-300 bg-base-100 p-6 transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-base-300/20"
 				>
-					<div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-						<div class="space-y-3">
-							<div class="flex items-center gap-3 text-sm text-base-content/60">
+					<div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-6">
+						<div class="min-w-0 flex-1 space-y-3">
+							<div class="flex flex-wrap items-center gap-2 text-sm text-base-content/60">
 								<span class="badge badge-outline">{post.data.category}</span>
 								<span>{formatDate(post.data.publishDate)}</span>
 							</div>
 							<h2 class="text-2xl font-semibold tracking-tight">{post.data.title}</h2>
-							<p class="max-w-3xl leading-8 text-base-content/75">{post.data.description}</p>
+							<p class="leading-8 text-base-content/75">{post.data.description}</p>
 						</div>
-						<span class="text-sm font-medium text-primary">{site.stories.openLabel}</span>
+						<span class="shrink-0 whitespace-nowrap text-sm font-medium text-primary">{site.stories.openLabel}</span>
 					</div>
 				</a>
 			))}

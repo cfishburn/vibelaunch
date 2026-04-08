@@ -35,4 +35,24 @@ const blog = defineCollection({
 	}),
 });
 
-export const collections = { blog, sitePages };
+const superpowers = defineCollection({
+	loader: glob({ pattern: '*.mdx', base: './src/content/superpowers' }),
+	schema: z.looseObject({
+		title: z.string(),
+		author: z.string().optional(),
+		date: z.coerce.date().optional(),
+		type: z.string().optional(),
+		file_name: z.string().optional(),
+		doc_type: z.string().optional(),
+		scope: z.union([z.string(), z.array(z.string())]).optional(),
+		version: z.string().optional(),
+		last_updated: z.coerce.date().optional(),
+		status: z.string().optional(),
+		supersedes: z.string().optional(),
+		owners: z.array(z.string()).optional(),
+		tags: z.array(z.string()).optional(),
+		related_docs: z.array(z.string()).optional(),
+	}),
+});
+
+export const collections = { blog, sitePages, superpowers };

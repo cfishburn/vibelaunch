@@ -1,30 +1,20 @@
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-
 import type { Brief, BriefCategory, BriefsResponse } from '../lib/briefs';
+import { formatDateTime } from '../lib/dates';
+import { fetchJson, getRequestErrorMessage } from '../lib/fetch-json';
+import QueryErrorNotice from './QueryErrorNotice';
+import ReactQueryProvider from './ReactQueryProvider';
 
 const categories: Array<'All' | BriefCategory> = ['All', 'Editorial', 'Research', 'Events'];
 
 async function fetchBriefs() {
-	const response = await fetch('/api/briefs.json');
-
-	if (!response.ok) {
-		throw new Error('Unable to load briefs');
-	}
-
-	return (await response.json()) as BriefsResponse;
-}
-
-function formatDate(dateString: string) {
-	return new Intl.DateTimeFormat('en-US', {
-		dateStyle: 'medium',
-		timeStyle: 'short',
-	}).format(new Date(dateString));
+	return fetchJson<BriefsResponse>('/api/briefs.json');
 }
 
 function BriefsPanelBody() {
 	const [activeCategory, setActiveCategory] = useState<'All' | BriefCategory>('All');
-	const { data, error, isPending, isFetching } = useQuery({
+	const { data, error, isPending, isFetching, refetch } = useQuery({
 		queryKey: ['briefs'],
 		queryFn: fetchBriefs,
 		staleTime: 60_000,
@@ -77,28 +67,38 @@ function BriefsPanelBody() {
 			) : null}
 
 			{error ? (
-				<div role="alert" className="alert alert-warning mt-5">
-					<span>Briefs could not be loaded right now.</span>
+				<div className="mt-5">
+					<QueryErrorNotice
+						title="The briefing feed could not be loaded."
+						message={getRequestErrorMessage(error, 'Try the request again in a moment.')}
+						onRetry={() => void refetch()}
+					/>
 				</div>
 			) : null}
 
 			{!isPending && !error ? (
 				<div className="mt-5 space-y-4">
+					{items.length === 0 ? (
+						<div className="rounded-card border border-base-300 bg-base-200/60 p-5 text-sm leading-7 text-base-content/70">
+							No briefs are available for this filter yet.
+						</div>
+					) : null}
+
 					{items.map((item: Brief) => (
 						<article
 							key={item.slug}
 							className="rounded-box border border-base-300 bg-base-200/60 p-4 transition hover:border-primary/30"
 						>
 							<div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-								<div className="space-y-2">
+								<div className="min-w-0 flex-1 space-y-2">
 									<div className="flex flex-wrap items-center gap-2 text-sm text-base-content/60">
 										<span className="badge badge-outline badge-sm">{item.category}</span>
-										<span>{formatDate(item.publishedAt)}</span>
+										<span>{formatDateTime(item.publishedAt)}</span>
 									</div>
-									<h4 className="text-lg font-semibold">{item.title}</h4>
+									<h4 className="text-lg font-semibold wrap-break-word">{item.title}</h4>
 									<p className="leading-7 text-base-content/75">{item.summary}</p>
 								</div>
-								<a className="btn btn-ghost btn-sm md:self-center" href={item.ctaHref}>
+								<a className="btn btn-ghost btn-sm shrink-0 md:self-center" href={item.ctaHref}>
 									{item.ctaLabel}
 								</a>
 							</div>
@@ -107,7 +107,7 @@ function BriefsPanelBody() {
 
 					<div className="flex items-center justify-between pt-2 text-xs uppercase tracking-caps text-base-content/45">
 						<span>{isFetching ? 'Refreshing' : 'Synced'}</span>
-						<span>{data ? formatDate(data.syncedAt) : 'Not available'}</span>
+						<span>{data ? formatDateTime(data.syncedAt) : 'Not available'}</span>
 					</div>
 				</div>
 			) : null}
@@ -116,11 +116,9 @@ function BriefsPanelBody() {
 }
 
 export default function BriefsPanel() {
-	const [queryClient] = useState(() => new QueryClient());
-
 	return (
-		<QueryClientProvider client={queryClient}>
+		<ReactQueryProvider>
 			<BriefsPanelBody />
-		</QueryClientProvider>
+		</ReactQueryProvider>
 	);
 }

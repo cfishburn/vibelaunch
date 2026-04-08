@@ -239,7 +239,7 @@ function checkLargeInterface(content, filePath) {
 
 function checkDuplicateStrings(content, filePath) {
 	const violations = [];
-	const stringRegex = /(?<=['"])([^'"]{8,})(?=['"])/g;
+	const stringRegex = /(['"])((?:\\.|(?!\1)[^\\\r\n]){8,})\1/g;
 	const counts = new Map();
 	let match;
 
@@ -249,7 +249,7 @@ function checkDuplicateStrings(content, filePath) {
 			break;
 		}
 
-		const str = match[1];
+		const str = match[2];
 		// Skip imports, URLs, CSS values, template expressions
 		if (/^(from|import|https?:\/\/|\.\/|\.\.\/|\/)/.test(str)) continue;
 		if (/^[0-9.]+[a-z%]*$/.test(str)) continue;

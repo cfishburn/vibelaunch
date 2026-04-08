@@ -1,11 +1,11 @@
 ---
-eyebrow: Admin area
-title: Simple admin page
-metaTitle: Admin area
+eyebrow: Demo surface
+title: "Auth demo: admin page"
+metaTitle: Admin demo
 description: This route is protected in middleware and backed by an admin-only Astro API route.
 useContentFlow: true
 actions:
-  - label: Open admin API
+  - label: Open admin demo API
     href: /api/admin/hello.json
     variant: primary
   - label: Back to member area
@@ -13,10 +13,10 @@ actions:
     variant: outline
 ---
 
-This page is the smallest useful admin slice.
+This page is the smallest useful admin slice in the starter.
 
 - The route itself is gated in middleware by `createRouteMatcher`.
 - The JSON endpoint behind it is also gated server-side.
 - Admin access is driven by the `CLERK_ADMIN_USER_IDS` allowlist in `.env`.
 
-The guard suite (`guard-secrets`) ensures that allowlist value never gets hardcoded in source. The AI guardrails (`CLAUDE.md`) tell assistants to use env vars instead.
+The guard suite (`guard-secrets`) ensures that allowlist values never get hardcoded in source. The AI guardrails (`CLAUDE.md`) tell assistants to use env vars instead.

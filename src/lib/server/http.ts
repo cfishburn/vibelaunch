@@ -15,14 +15,22 @@ export function jsonResponse(body: unknown, init: ResponseInit = {}) {
 	});
 }
 
+export function errorJson(status: number, message: string) {
+	return jsonResponse({ error: message, status }, { status });
+}
+
 export function unauthorizedJson(message = 'Unauthorized') {
-	return jsonResponse({ error: message }, { status: 401 });
+	return errorJson(401, message);
 }
 
 export function forbiddenJson(message = 'Forbidden') {
-	return jsonResponse({ error: message }, { status: 403 });
+	return errorJson(403, message);
 }
 
 export function badRequestJson(message = 'Bad Request') {
-	return jsonResponse({ error: message }, { status: 400 });
+	return errorJson(400, message);
+}
+
+export function serverErrorJson(message = 'Internal Server Error') {
+	return errorJson(500, message);
 }

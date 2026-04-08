@@ -1,4 +1,4 @@
-# AI.md — Scaffold Codebase Guardrails
+# AI.md — Vibe Launch (vibelaunch.ai) Codebase Guardrails
 
 This document describes the conventions, architecture, and constraints for AI assistants working on this codebase. Follow these rules to produce code that passes all automated checks and fits the existing patterns.
 
@@ -93,6 +93,7 @@ Astro files are linted too, but Biome's `noUnusedImports` and `noUnusedVariables
 ```
 src/config/site.ts    Brand, nav, footer, SEO defaults (single source of truth)
 src/components/       Astro components + React islands (.astro, .tsx)
+src/components/icons/ Shared flat icon wrapper + curated exports
 src/content/          Content collections (Markdown, MDX)
 src/layouts/          Page layouts
 src/lib/              Shared utilities and API clients
@@ -115,6 +116,42 @@ import { pageTitle, site } from '../config/site';
 // Use site.name, site.tagline, site.nav, site.footer
 // Use pageTitle('Stories') → "Stories | Vibe Launch"
 ```
+
+## Icons
+
+Use the local icon layer in `src/components/icons/`, not ad hoc SVG markup scattered across the app. The scaffold currently uses `iconoir-react`, but components should import from the wrapper so the icon pack remains swappable.
+
+---
+
+## Documentation Superpowers
+
+The `src/content/superpowers/` collection contains two complementary documentation systems:
+
+- `src/content/superpowers/doc-template.mdx` — Use for durable documentation that should remain authoritative beyond the current task.
+- `src/content/superpowers/dev-log.mdx` — Use for timestamped development narratives that capture active decision context, experiments, tradeoffs, and debugging history.
+
+The wider AI operating discipline for this repo lives here in `AI.md` and in `CLAUDE.md`, not in the public content collection.
+
+Treat them differently:
+
+- Use the doc template for project docs, feature docs, runbooks, ADRs, and guidelines.
+- Use devlogs only when the work is active and the decision trail would be lost in commits alone.
+- Do not create a devlog for trivial edits, formatting changes, or self-explanatory fixes.
+- When a devlog reveals lasting insight, promote that insight into a durable doc instead of treating the devlog as permanent documentation.
+
+If you create or edit documentation:
+
+1. Prefer the frontmatter structure and semantic hierarchy from `src/content/superpowers/doc-template.mdx`.
+2. Keep required sections populated. Do not leave placeholders.
+3. Use short paragraphs, bullet-first structure, and parsing-friendly formatting.
+4. Keep docs scoped accurately so future context loading stays precise.
+
+If you create or edit a devlog:
+
+1. Follow the frontmatter contract in `src/content/superpowers/dev-log.mdx`.
+2. Verify commit SHAs before writing them down.
+3. Include `Motivation` and `Changes Made` at minimum.
+4. Keep devlogs under `docs/devlog/` and treat them as operationally useful but temporary.
 
 ---
 
@@ -149,6 +186,7 @@ A registry-driven validation system runs at pre-commit (via husky) and CI. The r
 5. **Keep interfaces under 10 properties** — Split large types.
 6. **Do not create duplicate string literals** — Extract repeated strings (>3 occurrences, >8 chars) to constants.
 7. **Per-file opt-out** — Add `// scaffold-disable-solid-check` only for reviewed exceptions.
+8. **Prefer the shared icon layer** — Do not paste new raw SVG blocks into UI components when `src/components/icons/` already fits the need.
 
 ---
 
@@ -176,7 +214,9 @@ Protected routes are defined in `src/middleware.ts`. To add a new protected rout
 
 ## Content Collections
 
-Blog posts: `src/content/blog/*.md` with schema:
+Three collections defined in `src/content.config.ts`:
+
+### Blog (`src/content/blog/*.md`)
 
 ```
 title: string (required)
@@ -189,7 +229,7 @@ image: string (optional, for OG image)
 tags: string[] (default: [])
 ```
 
-Site pages: `src/content/site-pages/*.mdx` with schema:
+### Site pages (`src/content/site-pages/*.mdx`)
 
 ```
 eyebrow: string (required)
@@ -200,7 +240,23 @@ useContentFlow: boolean (default: true)
 actions: array of { label, href, variant } (default: [])
 ```
 
-When adding new schema fields, always use `.default()` or `.optional()` so existing content files remain valid.
+### Superpowers (`src/content/superpowers/*.mdx`)
+
+```
+title: string (required)
+author: string (optional)
+date: date (optional)
+doc_type: string (optional)
+scope: string or string[] (optional)
+version: string (optional)
+status: string (optional)
+owners: string[] (optional)
+tags: string[] (optional)
+```
+
+The collection uses a loose schema so these docs can carry extra metadata without breaking the build. Rendered at `/superpowers/[slug]`.
+
+When adding new schema fields to any collection, always use `.default()` or `.optional()` so existing content files remain valid.
 
 ---
 
@@ -228,6 +284,32 @@ Build-time endpoints:
 
 ---
 
+## Code Formatting
+
+Shiki (`github-light` theme) provides syntax highlighting for fenced code blocks in Markdown/MDX content. Configured in `astro.config.mjs` under `markdown.shikiConfig`.
+
+CSS for code is defined in `src/styles/global.css`:
+
+- **Inline code** (`code` in prose): monospace font, subtle `base-300` background, 0.875em size
+- **Fenced code blocks** (`pre`/`.astro-code`): `rounded-card`, `base-300` border, horizontal scroll on mobile
+- **Blockquotes**: left border with `primary` color, italic
+
+Use fenced code blocks in blog posts and superpowers docs to show real examples. Include language hints (```ts, ```css, ```yaml, ```html) for proper highlighting.
+
+---
+
+## Responsive Layout
+
+The layout is mobile-first:
+
+- **Header**: Full horizontal nav on desktop (`md:` and up). DaisyUI `dropdown` hamburger menu on mobile. Brand name hides below `sm:`, showing only the short name icon.
+- **Content grids**: Default to single column, expand to multi-column at `md:` or `lg:` breakpoints.
+- **Footer**: Stacks vertically on mobile, horizontal at `md:`.
+
+When adding new pages or components, always start with the mobile layout and add responsive breakpoints (`sm:`, `md:`, `lg:`) for wider screens.
+
+---
+
 ## Environment Variables
 
 All env vars must be:
@@ -248,6 +330,10 @@ Public vars use the `PUBLIC_` prefix. Secret vars (server-only) do not.
 **Add a new React island**: Create `src/components/MyComponent.tsx`. Use in Astro with `<MyComponent client:load />`.
 
 **Add a blog post**: Create `src/content/blog/my-post.md` with the required frontmatter fields.
+
+**Add durable documentation**: Start from `src/content/superpowers/doc-template.mdx`, keep the frontmatter accurate, and prefer links over duplicated sources of truth.
+
+**Add a devlog**: Only when a task spans multiple sessions or needs non-obvious rationale. Follow `src/content/superpowers/dev-log.mdx` and place entries under `docs/devlog/`.
 
 **Protect a route**: Add the pattern to `createRouteMatcher` in `src/middleware.ts`.
 

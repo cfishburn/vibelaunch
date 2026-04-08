@@ -1,0 +1,222 @@
+---
+file_name: dev-log.mdx
+title: Devlog Standard
+doc_type: guideline
+scope: "docs/devlog/**"
+version: 2.0.0
+last_updated: 2026-04-08
+status: active
+owners:
+  - "@Ontic-Labs"
+  - "@philippicoelho"
+tags:
+  - domain:engineering
+  - language:markdown
+related_docs:
+  - ./doc-template.mdx
+  - ./github-workflow.md
+---
+
+# Devlog Standard
+
+## Overview [required]
+
+Devlogs are timestamped development narratives that capture decision context not visible in commits alone. This standard defines where devlogs live, how entries are named, which metadata is mandatory, and which content structure each entry must follow. It exists to improve debugging speed, onboarding quality, and historical traceability while work is still active.
+
+## Goals [required]
+
+- Preserve reasoning behind non-obvious technical choices.
+- Record experiments, dead ends, and tradeoffs during implementation.
+- Provide a reliable trail for regressions discovered after merge.
+- Standardize format so humans and AI agents can parse entries consistently.
+
+## Non-Goals [required]
+
+- Replace permanent architecture or domain documentation.
+- Duplicate commit history without adding rationale.
+- Keep devlogs forever after context is no longer operationally useful.
+
+## Tech Stack [recommended]
+
+- Language: Markdown
+- Runtime: N/A
+- Framework: N/A (YAML frontmatter for metadata)
+- Infrastructure: Git repository, pull requests, and issue tracking context.
+
+## High-Level Architecture [recommended]
+
+- Devlogs live under `docs/devlog/` and are grouped by work context folder.
+- Each context folder can contain multiple timestamped files, one per session or logical work chunk.
+- Every file starts with required entry frontmatter, followed by a canonical narrative structure.
+- Entries map commits and optional issue/PR references to documented implementation rationale.
+- Typical flow:
+  - Pick the context folder for the work unit.
+  - Create a timestamped file using the naming convention.
+  - Fill frontmatter with required metadata.
+  - Write the narrative sections using the standard body template.
+  - Keep the entry while work is active and remove it only when lifecycle criteria are met.
+
+## Domain Concepts [conditional]
+
+- **Devlog Entry** — A single timestamped Markdown file that captures one development session.
+- **Context Folder** — A folder under `docs/devlog/` representing issue, PR, branch, or setup work.
+- **Session Scope** — The app/package surface impacted by a session, represented by `scope`.
+- **Entry Type** — Classification of change intent using commitlint-aligned values.
+
+### Context Folder Naming
+
+- `issue-{n}/`: Work tracked by a GitHub issue.
+- `pr-{n}/`: Work reviewed in a specific pull request.
+- `{branch-name}/`: Work tied to a feature branch.
+- `setup/`: Project bootstrap and initial configuration.
+
+### File Naming
+
+- `YYYY-MM-DD-HH-MM-SS-{slug}.md`
+- Timestamp must come from the first relevant commit in the session.
+- Slug must be short and kebab-case.
+
+### Entry Frontmatter Contract
+
+```yaml
+---
+date: 2026-02-20T17:58:28-03:00
+scope: [api, jobs]
+type: feat
+commits:
+  - a312f04
+  - 529d428
+pr: 10
+issue: 47
+---
+```
+
+Allowed `scope` reference values:
+- `api`, `jobs`, `builder`, `monorepo`, `ui`, `design-system`, or explicit package names.
+
+### Entry Body Structure
+
+```markdown
+# {App/Scope} - {Short Title}
+
+**Timestamp:** {ISO date}
+**Commits:** `{sha1}`, `{sha2}`
+**Context:** One sentence explaining why the session started.
+
+## Motivation
+
+## Changes Made
+
+### 1. {Logical change group}
+
+### 2. {Logical change group}
+
+## Key Technical Details
+
+## Lessons Learned
+
+## Files Changed
+```
+
+## Coding Conventions [recommended]
+
+- Project structure:
+  - Root: `docs/devlog/`.
+  - One context folder per work unit.
+  - One file per active session or logical chunk.
+- Naming:
+  - Context folders must follow the approved patterns.
+  - File names must follow timestamp plus slug format.
+  - Slugs must be concise and kebab-case.
+- Error handling:
+  - If commit references are missing, delay entry finalization until SHAs are known.
+  - If scope is ambiguous, use an array with all affected scopes.
+  - If there are no meaningful lessons, omit `Lessons Learned` only when truly justified.
+
+## Invariants and Critical Rules [required]
+
+- **Valid frontmatter**: Every devlog entry must include valid frontmatter with `date`, `scope`, `type`, and `commits`.
+  - Violated when: An entry is created without one or more required frontmatter fields.
+  - Consequence: The historical trail becomes unreliable and regression analysis slows down.
+  - Enforcement: Manual review during PR process.
+- **Commitlint-aligned type**: `type` must be one of: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`.
+  - Violated when: A non-standard type value is used.
+  - Consequence: Entries cannot be filtered or categorized consistently.
+  - Enforcement: Manual review during PR process.
+- **Complete commit references**: `commits` must include all short SHAs covered by the entry.
+  - Violated when: An entry omits commits that were part of the session.
+  - Consequence: Git blame and regression tracing become incomplete.
+  - Enforcement: Cross-reference with `git log` during review.
+- **Required body sections**: `Motivation` and `Changes Made` must always be present in the body.
+  - Violated when: An entry skips one of these sections or leaves them empty.
+  - Consequence: The devlog loses its primary value as a decision-context artifact.
+  - Enforcement: Manual review during PR process.
+- **Ephemeral but not premature**: Devlogs are ephemeral, but should not be removed immediately after merge.
+  - Violated when: An entry is deleted in the same PR that merges the work.
+  - Consequence: Post-merge observability is lost during the most critical window.
+  - Enforcement: Team convention.
+
+## AI Agent Behavior Guidelines [required]
+
+When operating within this domain, AI agents must obey these generation rules:
+
+- **No placeholders** — When generating devlog entries, do not omit sections with comments like `// fill in later`. Provide the complete entry with all required sections.
+- **Accurate commit references** — Always verify commit SHAs exist before including them in frontmatter. Use `git log` to confirm.
+- **Invariant awareness** — Before creating or modifying devlog entries, check the "Invariants and Critical Rules" section. Flag potential violations before proceeding.
+- **Scope accuracy** — Use only allowed scope reference values. If a new scope is needed, flag it for review rather than inventing one.
+
+## Tasks for AI Assistance [required]
+
+- **Create new devlog entry**:
+  - Input: Context folder, session summary, commit SHAs, issue/PR references.
+  - Steps:
+    1. Identify or create the context folder under `docs/devlog/`.
+    2. Generate a filename using the timestamp of the first commit and a short slug.
+    3. Fill required frontmatter fields (`date`, `scope`, `type`, `commits`, and optional `pr`/`issue`).
+    4. Write all required body sections (`Motivation`, `Changes Made`) and recommended sections.
+  - Constraints: Must not leave required sections empty. Must use allowed scope values. Must verify commit SHAs with `git log`.
+  - Validation: Naming, metadata, and mandatory sections are all compliant with this standard.
+- **Normalize existing devlogs**:
+  - Input: One or more legacy entries.
+  - Steps:
+    1. Read the existing entry content.
+    2. Map existing content to the standard body template sections.
+    3. Reformat frontmatter to include all required fields.
+    4. Preserve historical meaning while applying structural compliance.
+  - Constraints: Must not lose historical meaning during reformatting. Must not invent information not present in the original.
+  - Validation: All frontmatter fields present and valid. All required body sections populated.
+- **Validate compliance**:
+  - Input: Target devlog files.
+  - Steps:
+    1. Check frontmatter for required fields and valid values.
+    2. Verify body contains all required sections.
+    3. Cross-reference commit SHAs with git history.
+    4. Report all findings.
+  - Constraints: Must report missing metadata, invalid types/scopes, and structural gaps without auto-fixing.
+  - Validation: Report is complete and accurate.
+- **Summarize sessions**:
+  - Input: Multiple entries in one context folder.
+  - Steps:
+    1. Read all entries in chronological order.
+    2. Extract key decisions, changes, and lessons from each.
+    3. Produce a concise timeline summary.
+  - Constraints: Must preserve decision context and rationale, not just list changes.
+  - Validation: Summary covers all entries and captures non-obvious decisions.
+
+## Known Pitfalls and Anti-Patterns [recommended]
+
+- **Chronological notes without rationale**:
+  - Why it is harmful: Notes that only describe what happened without explaining why provide no more value than `git log`.
+  - Preferred approach: Always include decision context and reasoning in the `Motivation` and `Key Technical Details` sections.
+- **Inconsistent scope names**:
+  - Why it is harmful: Scopes that cannot be mapped to project areas break filtering and categorization.
+  - Preferred approach: Use only the allowed scope reference values defined in this standard.
+- **Omitting failed attempts**:
+  - Why it is harmful: Hides useful debugging history and causes future developers to repeat the same dead ends.
+  - Preferred approach: Document failed approaches in `Lessons Learned` with reasoning for why they were abandoned.
+- **Premature deletion**:
+  - Why it is harmful: Deleting devlogs immediately after merge reduces post-merge observability during the critical regression window.
+  - Preferred approach: Keep devlogs for at least one release cycle after merge.
+- **Treating devlogs as permanent docs**:
+  - Why it is harmful: Devlogs accumulate indefinitely and become stale, cluttering the repository.
+  - Preferred approach: Remove devlogs when the context is no longer operationally useful, after promoting any lasting insights to permanent documentation.

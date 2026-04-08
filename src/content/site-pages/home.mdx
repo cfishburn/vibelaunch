@@ -1,62 +1,75 @@
 ---
-eyebrow: Open source scaffold
-title: An AI-friendly Astro starter with guard scripts, design tokens, and convention files
-metaTitle: An AI-friendly Astro starter with guard scripts, design tokens, and convention files
-description: Ship with CLAUDE.md, AI.md, a guard suite, design tokens, and content collections that tell AI coding assistants exactly how to work on your project.
+eyebrow: Open-source exit ramp
+title: Keep the speed. Lose the vibe-coding entropy.
+metaTitle: Keep the speed. Lose the vibe-coding entropy.
+description: Got something half-working in Lovable, Bolt, Replit, or a late-night prompt spiral? This starter gives you a sane codebase to move into before the whole thing turns into a haunted mess.
 useContentFlow: false
 actions:
-  - label: Open member page
-    href: /app
+  - label: Read the exit plan
+    href: /how-to-scaffold-an-agentic-coding-project
     variant: primary
-  - label: Browse stories
-    href: /stories
+  - label: Open docs library
+    href: /superpowers
     variant: outline
+  - label: Inspect auth demo
+    href: /app
+    variant: ghost
 ---
 
-<div className="grid gap-6 lg:grid-cols-3">
-	<div className="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
+<div className="grid gap-px overflow-hidden rounded-card border border-base-300 md:grid-cols-2 lg:grid-cols-4">
+	<div className="bg-base-100 p-6">
 		<p className="text-sm font-semibold uppercase tracking-caps text-primary">AI guardrails</p>
-		<h2 className="mt-4 text-2xl font-semibold tracking-tight">CLAUDE.md + AI.md</h2>
-		<p className="mt-3 leading-8 text-base-content/75">
-			Convention files that tell AI assistants your code style, design tokens, guard rules, and content schemas before they write a line.
+		<h2 className="mt-3 text-lg font-semibold tracking-tight">Tell the machine what repo it is in</h2>
+		<p className="mt-2 text-sm leading-7 text-base-content/70">
+			Convention files that tell AI assistants your code style, design tokens, guard rules, and content schemas before they “help” you into a ditch.
 		</p>
 	</div>
-	<div className="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
+	<div className="bg-base-100 p-6">
 		<p className="text-sm font-semibold uppercase tracking-caps text-primary">Guard suite</p>
-		<h2 className="mt-4 text-2xl font-semibold tracking-tight">6 registry-driven checks</h2>
-		<p className="mt-3 leading-8 text-base-content/75">
-			Secrets, bypass attempts, lint errors, lockfile drift, SOLID heuristics, and build artifact scanning — all at commit time.
+		<h2 className="mt-3 text-lg font-semibold tracking-tight">Checks that say “absolutely not”</h2>
+		<p className="mt-2 text-sm leading-7 text-base-content/70">
+			Secrets, bypass attempts, lint errors, lockfile drift, SOLID heuristics, and public smoke checks. The commit hook is the adult in the room.
 		</p>
 	</div>
-	<div className="rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
+	<div className="bg-base-100 p-6">
 		<p className="text-sm font-semibold uppercase tracking-caps text-primary">Design tokens</p>
-		<h2 className="mt-4 text-2xl font-semibold tracking-tight">Zero arbitrary values</h2>
-		<p className="mt-3 leading-8 text-base-content/75">
-			Custom <code>@theme</code> tokens and DaisyUI semantic classes mean AI tools always pick the right Tailwind class.
+		<h2 className="mt-3 text-lg font-semibold tracking-tight">No haunted CSS choices</h2>
+		<p className="mt-2 text-sm leading-7 text-base-content/70">
+			Custom <code>@theme</code> tokens and DaisyUI semantic classes mean AI tools reach for the right class instead of improvising nonsense.
+		</p>
+	</div>
+	<div className="bg-base-100 p-6">
+		<p className="text-sm font-semibold uppercase tracking-caps text-primary">Doc superpowers</p>
+		<h2 className="mt-3 text-lg font-semibold tracking-tight">Documentation that still makes sense next Tuesday</h2>
+		<p className="mt-2 text-sm leading-7 text-base-content/70">
+			A durable doc template plus a selective devlog standard so planning stays durable and implementation context stays findable.
 		</p>
 	</div>
 </div>
 
-<div className="mt-8 rounded-card border border-base-300 bg-base-100 p-6 shadow-lg shadow-base-300/15">
-	<p className="text-sm font-semibold uppercase tracking-caps text-primary">What's inside</p>
-	<div className="mt-4 grid gap-4 md:grid-cols-3">
-		<div className="rounded-box border border-base-300 bg-base-200/60 p-4">
-			<p className="font-semibold">1. Conventions</p>
-			<p className="mt-2 text-sm leading-7 text-base-content/75">
-				Site config, design tokens, content schemas, and AI guardrails — all documented and enforced.
-			</p>
-		</div>
-		<div className="rounded-box border border-base-300 bg-base-200/60 p-4">
-			<p className="font-semibold">2. Auth + BFF</p>
-			<p className="mt-2 text-sm leading-7 text-base-content/75">
-				Clerk middleware, protected routes, and Astro API routes sitting between the browser and backend.
-			</p>
-		</div>
-		<div className="rounded-box border border-base-300 bg-base-200/60 p-4">
-			<p className="font-semibold">3. SEO + LLMs</p>
-			<p className="mt-2 text-sm leading-7 text-base-content/75">
-				OpenGraph, JSON-LD, sitemap, robots.txt, and llms.txt — all generated from content collections at build time.
-			</p>
-		</div>
+<div className="mt-10 grid gap-6 md:grid-cols-2">
+	<div className="space-y-2">
+		<h2 className="text-2xl font-semibold tracking-tight">This is the way out and forward</h2>
+		<p className="leading-8 text-base-content/70">
+			This starter is for people who do not want to throw away what AI helped them discover, but also do not want to spend the next six months living inside a repo that feels like an elaborate practical joke.
+		</p>
 	</div>
+	<dl className="grid gap-4 text-sm">
+		<div className="flex gap-4">
+			<dt className="shrink-0 font-semibold">Auth + BFF</dt>
+			<dd className="text-base-content/70">A clearly labeled demo surface showing what “browser talks to Astro, Astro talks to services” looks like in practice.</dd>
+		</div>
+		<div className="flex gap-4">
+			<dt className="shrink-0 font-semibold">SEO + LLMs</dt>
+			<dd className="text-base-content/70">OpenGraph, JSON-LD, sitemap, robots.txt, and llms.txt — so the public surface is structured, not improvised.</dd>
+		</div>
+		<div className="flex gap-4">
+			<dt className="shrink-0 font-semibold">Content</dt>
+			<dd className="text-base-content/70">Markdown stories, MDX site pages, and documentation standards — all typed with Zod schemas so copy changes do not quietly break the app.</dd>
+		</div>
+		<div className="flex gap-4">
+			<dt className="shrink-0 font-semibold">Quality</dt>
+			<dd className="text-base-content/70">Biome lint + format, strict TypeScript, Astro check, smoke coverage, and pnpm enforced. In other words: fewer surprises, fewer exorcisms.</dd>
+		</div>
+	</dl>
 </div>

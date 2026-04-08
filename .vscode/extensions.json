@@ -1,4 +1,10 @@
 {
-	"recommendations": ["astro-build.astro-vscode", "biomejs.biome"],
+	"recommendations": [
+		"astro-build.astro-vscode",
+		"biomejs.biome",
+		"bradlc.vscode-tailwindcss",
+		"unifiedjs.vscode-mdx",
+		"supabase.vscode-supabase-extension"
+	],
 	"unwantedRecommendations": []
 }

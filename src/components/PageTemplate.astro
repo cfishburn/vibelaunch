@@ -19,8 +19,8 @@ const hasActions = Astro.slots.has('actions');
 		<div class="rounded-card-lg border border-base-300 bg-base-100 p-8 shadow-xl shadow-base-300/15">
 			<div class="max-w-3xl space-y-4">
 				<p class="eyebrow">{eyebrow}</p>
-				<h1 class="text-5xl font-semibold tracking-tight text-balance">{title}</h1>
-				{description ? <p class="text-lg leading-8 text-base-content/75">{description}</p> : null}
+				<h1 class="text-3xl font-semibold tracking-tight text-balance sm:text-4xl lg:text-5xl">{title}</h1>
+				{description ? <p class="text-lg leading-8 wrap-break-word text-base-content/75">{description}</p> : null}
 				{hasActions ? (
 					<div class="flex flex-wrap gap-3 pt-2">
 						<slot name="actions" />

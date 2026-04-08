@@ -1,6 +1,16 @@
 ---
 import { Show, UserButton } from '@clerk/astro/react';
+import {
+	BookIcon,
+	HomeIcon,
+	Icon,
+	MenuIcon,
+	ShieldCheckIcon,
+	TerminalIcon,
+	UserIcon,
+} from '../components/icons';
 import SEO from '../components/SEO.astro';
+import ThemeToggle from '../components/ThemeToggle';
 import { site } from '../config/site';
 import '../styles/global.css';
 
@@ -23,16 +33,27 @@ const {
 	author,
 	tags,
 } = Astro.props as Props;
+
+const navIcons = {
+	home: HomeIcon,
+	playbook: TerminalIcon,
+	docs: BookIcon,
+	app: UserIcon,
+	stories: BookIcon,
+} as const;
 ---
 
 <!doctype html>
 <html lang={site.locale} data-theme={site.theme}>
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
+		<script is:inline>
+			(function(){var t=localStorage.getItem('vl-theme');if(!t){t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)})();
+		</script>
 		<SEO
 			title={title}
 			description={description}
@@ -47,21 +68,35 @@ const {
 		<div class="site-chrome">
 			<header class="border-b border-base-300/80 bg-base-100/80 backdrop-blur">
 				<div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-					<a href="/" class="flex items-center gap-3 text-sm font-semibold uppercase tracking-caps">
-						<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-primary">
+					<a href="/" class="flex shrink-0 items-center gap-3 text-sm font-semibold uppercase tracking-caps">
+						<span class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-xs text-primary">
 							{site.shortName}
 						</span>
-						{site.name}
+						<span class="hidden truncate sm:inline sm:max-w-48">{site.name}</span>
 					</a>
-					<nav class="flex items-center gap-2">
-						{site.nav.map(({ label, href }) => (
-							<a class="btn btn-ghost btn-sm" href={href}>{label}</a>
-						))}
-						<div class="ml-2 border-l border-base-300 pl-3">
+
+					{/* ── Desktop nav ── */}
+					<nav class="hidden items-center gap-2 md:flex">
+						{site.nav.map(({ label, href, icon }) => {
+							const NavIcon = navIcons[icon];
+
+							return (
+								<a class="btn btn-ghost btn-sm gap-2 truncate" href={href}>
+									<Icon icon={NavIcon} className="h-4 w-4 shrink-0" />
+									<span>{label}</span>
+								</a>
+							);
+						})}
+						<div class="ml-2 flex items-center gap-2 border-l border-base-300 pl-3">
+							<ThemeToggle client:load />
 							<Show when="signed-out" client:load>
 								<div class="flex items-center gap-2">
-									<a class="btn btn-ghost btn-sm" href="/sign-in">{site.auth.signInLabel}</a>
-									<a class="btn btn-primary btn-sm" href="/sign-up">
+									<a class="btn btn-ghost btn-sm gap-2" href="/sign-in">
+										<Icon icon={UserIcon} className="h-4 w-4" />
+										{site.auth.signInLabel}
+									</a>
+									<a class="btn btn-primary btn-sm gap-2" href="/sign-up">
+										<Icon icon={ShieldCheckIcon} className="h-4 w-4" />
 										{site.auth.signUpLabel}
 									</a>
 								</div>
@@ -71,15 +106,64 @@ const {
 							</Show>
 						</div>
 					</nav>
+
+					{/* ── Mobile nav ── */}
+					<div class="flex items-center gap-2 md:hidden">
+						<ThemeToggle client:load />
+						<Show when="signed-in" client:load>
+							<UserButton client:load />
+						</Show>
+						<div class="dropdown dropdown-end">
+							<div tabindex="0" role="button" class="btn btn-ghost btn-sm btn-square">
+								<Icon icon={MenuIcon} className="h-5 w-5" />
+							</div>
+							<ul tabindex="0" class="menu dropdown-content z-10 mt-3 w-52 max-w-[calc(100vw-2rem)] rounded-card border border-base-300 bg-base-100 p-2 shadow-lg">
+								{site.nav.map(({ label, href, icon }) => {
+									const NavIcon = navIcons[icon];
+
+									return (
+										<li>
+											<a class="flex items-center gap-2" href={href}>
+												<Icon icon={NavIcon} className="h-4 w-4" />
+												<span>{label}</span>
+											</a>
+										</li>
+									);
+								})}
+								<li class="border-t border-base-300 mt-1 pt-1">
+									<Show when="signed-out" client:load>
+										<a class="flex items-center gap-2" href="/sign-in">
+											<Icon icon={UserIcon} className="h-4 w-4" />
+											<span>{site.auth.signInLabel}</span>
+										</a>
+									</Show>
+								</li>
+								<Show when="signed-out" client:load>
+									<li>
+										<a class="flex items-center gap-2 text-primary font-medium" href="/sign-up">
+											<Icon icon={ShieldCheckIcon} className="h-4 w-4" />
+											{site.auth.signUpLabel}
+										</a>
+									</li>
+								</Show>
+							</ul>
+						</div>
+					</div>
 				</div>
 			</header>
 			<main>
 				<slot />
 			</main>
 			<footer class="border-t border-base-300/80 bg-base-100/80">
-				<div class="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-base-content/70 md:flex-row md:items-center md:justify-between">
-					<p>{site.footer.left}</p>
-					<p>{site.footer.right}</p>
+				<div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8 text-sm text-base-content/70 md:flex-row md:items-center md:justify-between">
+					<p class="wrap-break-word">{site.footer.left}</p>
+					<div class="flex flex-wrap items-center gap-2 md:gap-4 md:justify-end">
+						<a class="whitespace-nowrap transition hover:text-base-content" href="/superpowers">Docs</a>
+						<span class="text-base-content/30">|</span>
+						<a class="whitespace-nowrap transition hover:text-base-content" href="/legal">Terms & Privacy</a>
+						<span class="text-base-content/30">|</span>
+						<p class="wrap-break-word">{site.footer.right}</p>
+					</div>
 				</div>
 			</footer>
 		</div>

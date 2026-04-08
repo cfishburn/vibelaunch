@@ -2,7 +2,9 @@
 export const prerender = false;
 
 import AdminPanel from '../components/AdminPanel';
+import PageActions from '../components/PageActions.astro';
 import PageTemplate from '../components/PageTemplate.astro';
+import SitePageContent from '../components/SitePageContent.astro';
 import { getSitePage } from '../lib/site-pages';
 
 const { Content, entry } = await getSitePage('admin');
@@ -14,29 +16,8 @@ const { Content, entry } = await getSitePage('admin');
 	description={entry.data.description}
 	metaTitle={entry.data.metaTitle}
 >
-	<div slot="actions">
-		{entry.data.actions.map((action) => (
-			<a
-				class:list={[
-					'btn',
-					action.variant === 'primary' && 'btn-primary',
-					action.variant === 'outline' && 'btn-outline',
-					action.variant === 'ghost' && 'btn-ghost',
-				]}
-				href={action.href}
-			>
-				{action.label}
-			</a>
-		))}
-	</div>
-
-	{entry.data.useContentFlow ? (
-		<article class="content-flow mb-8">
-			<Content />
-		</article>
-	) : (
-		<Content />
-	)}
+	<PageActions slot="actions" actions={entry.data.actions} />
+	<SitePageContent Content={Content} useContentFlow={entry.data.useContentFlow} class="mb-8" />
 
 	<AdminPanel client:load />
 </PageTemplate>

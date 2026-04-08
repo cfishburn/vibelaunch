@@ -1,0 +1,30 @@
+---
+interface Action {
+	label: string;
+	href: string;
+	variant: 'primary' | 'outline' | 'ghost';
+}
+
+interface Props {
+	actions?: Action[];
+}
+
+const { actions = [] } = Astro.props as Props;
+---
+
+<>
+	{actions.map((action) => (
+		<a
+			class:list={[
+				'btn',
+				action.variant === 'primary' && 'btn-primary',
+				action.variant === 'outline' && 'btn-outline',
+				action.variant === 'ghost' && 'btn-ghost',
+			]}
+			href={action.href}
+		>
+			{action.label}
+		</a>
+	))}
+	<slot />
+</>

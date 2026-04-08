@@ -4,6 +4,7 @@ export const prerender = false;
 import { SignIn } from '@clerk/astro/react';
 
 import PageTemplate from '../../components/PageTemplate.astro';
+import SitePageContent from '../../components/SitePageContent.astro';
 import { getSitePage } from '../../lib/site-pages';
 
 const { Content, entry } = await getSitePage('sign-in');
@@ -21,11 +22,5 @@ const { Content, entry } = await getSitePage('sign-in');
 		</div>
 	</div>
 
-	{entry.data.useContentFlow ? (
-		<article class="content-flow mt-8">
-			<Content />
-		</article>
-	) : (
-		<Content />
-	)}
+	<SitePageContent Content={Content} useContentFlow={entry.data.useContentFlow} class="mt-8" />
 </PageTemplate>

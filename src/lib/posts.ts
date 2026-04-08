@@ -1,5 +1,7 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 
+export { formatDate } from './dates';
+
 export type BlogEntry = CollectionEntry<'blog'>;
 
 export async function getAllPosts() {
@@ -13,10 +15,4 @@ export async function getAllPosts() {
 export async function getFeaturedPosts() {
 	const posts = await getAllPosts();
 	return posts.filter((post) => post.data.featured);
-}
-
-export function formatDate(date: Date) {
-	return new Intl.DateTimeFormat('en-US', {
-		dateStyle: 'medium',
-	}).format(date);
 }
